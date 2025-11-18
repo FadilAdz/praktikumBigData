@@ -84,10 +84,41 @@ File bigfile.dat berukuran 150MB (157,286,400 bytes) dipecah oleh HDFS menjadi 2
 
 
 ### Bagian 2 Praktikum MongoDB
-1. **Membuat**
+1. **Memilih database yang ingin digunakan**
    ```mongodb
-   Mongodb
+   use praktikum
    ```
-   ![Picture for MongoDB](assets/assetsmongodb/.png)
+   ![Picture for MongoDB](assets/assetsmongodb/mongo1.png) <br>
+   Pastikan database otomatis dibuat saat perintah insert pertama dijalankan. <br> <br>
+
+2. **Menambahkan data pada tabel mahasiswa**
+   ```mongodb
+   db.mahasiswa.insertOne({ nim: "312310617", nama: "Fadil", jurusan: "Informatika" })
+   ```
+   ![Picture for MongoDB](assets/assetsmongodb/mongo2.png) <br> <br>
+
+3. **Memeriksa data yang sudah inputkan sebelumnya**
+   ```mongodb
+   db.mahasiswa.find()
+   ```
+   ![Picture for MongoDB](assets/assetsmongodb/mongo3.png) <br> <br>
+
+4. **Menambahkan data sekaligus banyak & Periksa data**
+   ```mongodb
+   db.mahasiswa.insertMany([
+    { nim: "31231022", nama: "Budi", jurusan: "Sistem Informasi" },
+    { nim: "31231023", nama: "Andi", jurusan: "Sistem Informasi" },
+    { nim: "31231024", nama: "Cihuy", jurusan: "Teknik Mesin" },
+    { nim: "31231025", nama: "Tomas", jurusan: "Arsitektur" }
+   ])
+   ```
+   ![Picture for MongoDB](assets/assetsmongodb/mongo4.png) <br> <br>
+
+5. **Mencari data menggunakan query filter**
+   ```mongodb
+   ## Query filter bisa disesuaikan masing masing
+   db.mahasiswa.find({ jurusan: "Informatika" })
+   ```
+   ![Picture for MongoDB](assets/assetsmongodb/mongo5.png) <br> <br>
 
 
