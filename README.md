@@ -57,4 +57,38 @@ Pastikan perangkat lunak berikut sudah terpasang:
    ```bash
    hdfs dfs -cat /praktikum/dataset.csv
    ```
-   ![Picture for HDFS](assets/hdfs4.png) <br> <br>
+   ![Picture for HDFS](assets/hdfs4.png) <br> <br> <br>
+   
+
+#### Latihan: coba upload file besar (>100MB) dan periksa apakah file tersebut terpecah menjadi blok-blok kecil di HDFS.
+1. **Membuat file dummy 150MB lalu upload file besar tersebut ke dalam direktori praktikum**
+   ```bash
+   # Buat file dummy 150MB
+   dd if=/dev/zero of=bigfile.dat bs=1M count=150
+   
+   # Upload ke HDFS
+   hdfs dfs -put bigfile.dat /praktikum/
+   ```
+   ![Picture for HDFS](assets/hdfs5.png) <br> <br>
+
+2. **Periksa detail file telah terpecah menjadi beberapa blok**
+   ```bash
+   hdfs fsck /praktikum/bigfile.dat -files -blocks -locations
+   ```
+   ![Picture for HDFS](assets/hdfs6.png) <br> <br>
+
+**Penjelasan Singkat**
+File bigfile.dat berukuran 150MB (157,286,400 bytes) dipecah oleh HDFS menjadi 2 blok dengan ukuran rata-rata sekitar 78.6MB per blok, karena HDFS secara otomatis memecah file besar menjadi blok-blok dengan ukuran default (biasanya 128MB atau lebih kecil tergantung konfigurasi) untuk memudahkan penyimpanan terdistribusi, paralelisme pemrosesan, dan fault tolerance dalam sistem big data.
+
+<br> <br>
+
+
+
+### Bagian 2 Praktikum MongoDB
+1. **Membuat**
+   ```mongodb
+   Mongodb
+   ```
+   ![Picture for MongoDB](assets/.png)
+
+
