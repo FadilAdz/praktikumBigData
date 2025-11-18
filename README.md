@@ -24,7 +24,7 @@ Pastikan perangkat lunak berikut sudah terpasang:
    ```bash
    hdfs dfs -mkdir /praktikum
    ```
-   ![Picture for HDFS](assets/hdfs1.png)
+   ![Picture for HDFS](assets/assetshdfs/hdfs1.png)
    Direkomendasikan memastikan direktori belum ada dengan `hdfs dfs -ls /`. <br> <br>
 
 2. **Membuat sebuah file beserta dummy data pada file datasest.csv**
@@ -41,7 +41,7 @@ Pastikan perangkat lunak berikut sudah terpasang:
     12352,Hadi,Sistem Informasi,3.55
     EOF
    ```
-   ![Picture for HDFS](assets/hdfs2.png) <br> <br>
+   ![Picture for HDFS](assets/assets/hdfs2.png) <br> <br>
 
 3. **Mengunggah dataset ke HDFS & Verfikasi isi direktori**
    ```bash
@@ -51,13 +51,13 @@ Pastikan perangkat lunak berikut sudah terpasang:
    ## Perintah untuk memeriksa isi dari direktori praktikum
    hdfs dfs -ls /praktikum/
    ```
-   ![Picture for HDFS](assets/hdfs3.png) <br> <br>
+   ![Picture for HDFS](assets/assetshdfs/hdfs3.png) <br> <br>
 
 4. **Membaca isi dataset langsung dari HDFS**
    ```bash
    hdfs dfs -cat /praktikum/dataset.csv
    ```
-   ![Picture for HDFS](assets/hdfs4.png) <br> <br> <br>
+   ![Picture for HDFS](assets/assetshdfs/hdfs4.png) <br> <br> <br>
    
 
 #### Latihan: coba upload file besar (>100MB) dan periksa apakah file tersebut terpecah menjadi blok-blok kecil di HDFS.
@@ -69,13 +69,13 @@ Pastikan perangkat lunak berikut sudah terpasang:
    # Upload ke HDFS
    hdfs dfs -put bigfile.dat /praktikum/
    ```
-   ![Picture for HDFS](assets/hdfs5.png) <br> <br>
+   ![Picture for HDFS](assets/assetshdfs/hdfs5.png) <br> <br>
 
 2. **Periksa detail file telah terpecah menjadi beberapa blok**
    ```bash
    hdfs fsck /praktikum/bigfile.dat -files -blocks -locations
    ```
-   ![Picture for HDFS](assets/hdfs6.png) <br> <br>
+   ![Picture for HDFS](assets/assetshdfs/hdfs6.png) <br> <br>
 
 **Penjelasan Singkat**
 File bigfile.dat berukuran 150MB (157,286,400 bytes) dipecah oleh HDFS menjadi 2 blok dengan ukuran rata-rata sekitar 78.6MB per blok, karena HDFS secara otomatis memecah file besar menjadi blok-blok dengan ukuran default (biasanya 128MB atau lebih kecil tergantung konfigurasi) untuk memudahkan penyimpanan terdistribusi, paralelisme pemrosesan, dan fault tolerance dalam sistem big data.
@@ -89,6 +89,6 @@ File bigfile.dat berukuran 150MB (157,286,400 bytes) dipecah oleh HDFS menjadi 2
    ```mongodb
    Mongodb
    ```
-   ![Picture for MongoDB](assets/.png)
+   ![Picture for MongoDB](assets/assetsmongodb/.png)
 
 
