@@ -56,7 +56,7 @@ Pastikan perangkat lunak berikut sudah terpasang:
    ```bash
    hdfs dfs -cat /praktikum/dataset.csv
    ```
-   ![Picture for HDFS](assets/assetshdfs/hdfs4.png) <br> <br> <br>
+   ![Picture for HDFS](assets/assetshdfs/hdfs4.png) <br> <br>
    
 
 #### Latihan: coba upload file besar (>100MB) dan periksa apakah file tersebut terpecah menjadi blok-blok kecil di HDFS.
