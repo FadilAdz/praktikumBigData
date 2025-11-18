@@ -174,8 +174,7 @@ File bigfile.dat berukuran 150MB (157,286,400 bytes) dipecah oleh HDFS menjadi 2
    ```cassandra
    use 
    ```
-   ![Picture for MongoDB](assets/assetscassandra/cassandra1.png) <br>
-   Pastikan database otomatis dibuat saat perintah insert pertama dijalankan. <br> <br>
+   ![Picture for Cassandra](assets/assetscassandra/cassandra1.png) <br> <br>
 
 
 
