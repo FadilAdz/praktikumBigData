@@ -159,7 +159,7 @@ File bigfile.dat berukuran 150MB (157,286,400 bytes) dipecah oleh HDFS menjadi 2
    ```
    ![Picture for MongoDB](assets/assetsmongodb/mongo8.png) <br> <br>
 
-   2. **Menampilkan data yang telah dibuat dalam bentuk nested json dengan menggunakan query nested field**
+2. **Menampilkan data yang telah dibuat dalam bentuk nested json dengan menggunakan query nested field**
    ```mongodb
    db.mahasiswa.find({ "alamat.kota": "Jakarta" })
    ```
