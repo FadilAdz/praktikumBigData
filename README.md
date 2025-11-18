@@ -170,11 +170,141 @@ File bigfile.dat berukuran 150MB (157,286,400 bytes) dipecah oleh HDFS menjadi 2
 
 
 ### Bagian 3 Praktikum Cassandra
-1. **Mem**
+1. **Membuat keyspace praktikum**
    ```cassandra
-   use 
+   CREATE KEYSPACE praktikum
+   WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+
+   ## Gunakan keyspace
+   USE praktikum;
    ```
    ![Picture for Cassandra](assets/assetscassandra/cassandra1.png) <br> <br>
+
+2. **Membuat tabel mahasiswa didalam keyspace praktikum**
+   ```cassandra
+   CREATE TABLE mahasiswa (
+    nim text PRIMARY KEY,
+    nama text,
+    jurusan text
+   );
+   ```
+   ![Picture for Cassandra](assets/assetscassandra/cassandra2.png) <br> <br>
+
+3. **Memasukkan data pada tabel mahasiswa**
+   ```cassandra
+   INSERT INTO mahasiswa (nim, nama, jurusan)
+   VALUES ('12345', 'Budi', 'Informatika');
+
+   ## Tampilkan data
+   SELECT * FROM mahasiswa;
+   ```
+   ![Picture for Cassandra](assets/assetscassandra/cassandra3.png) <br> <br>
+
+4. **Memasukkan banyak data dan tampilkan berdasarkan filter**
+   ```cassandra
+   INSERT INTO mahasiswa (nim, nama, jurusan) 
+   VALUES ('12346', 'Citra', 'Sistem Informasi');
+   
+   INSERT INTO mahasiswa (nim, nama, jurusan) 
+   VALUES ('12347', 'Dewi', 'Teknik Komputer');
+   
+   INSERT INTO mahasiswa (nim, nama, jurusan) 
+   VALUES ('12348', 'Eko', 'Informatika');
+
+   ## Filter Data
+   SELECT * FROM mahasiswa WHERE jurusan='Informatika' ALLOW FILTERING;
+
+   ## Lalu Ubah replication factor (untuk cluster)
+   ALTER KEYSPACE praktikum WITH replication =
+   {'class':'SimpleStrategy','replication_factor':3};
+   ```
+   ![Picture for Cassandra](assets/assetscassandra/cassandra4.png) <br> <br>
+
+
+   #### Latihan: coba jalankan Cassandra dalam 2 node cluster menggunakan Docker Compose dan amati distribusi data.
+1. **Pertama tama kita membuat skrip nya terlbih dahulu didalam file docker-compose.yml (yang sudah terlampir). Setelah itu periksa hasil skrip tadi dengan perintah:**
+   ```cassandra
+   docker-compose ps
+   ```
+   ![Picture for Cassandra](assets/assetscassandra/cassandra5.png) <br> <br>
+
+2. **Lalu jalankan sesi shell CQL interaktif**
+   ```cassandra
+   docker exec -it cassandra-node1 cqlsh
+   ```
+   ![Picture for Cassandra](assets/assetscassandra/cassandra6.png) <br> <br>
+
+3. **Membuat keyspace latihan & membuat tabel users**
+   ```cassandra
+   CREATE KEYSPACE latihan
+   WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 2};
+   cqlsh> USE latihan;
+   cqlsh:latihan> CREATE TABLE users (
+   id int PRIMARY KEY,
+   name text
+   );
+   ```
+   ![Picture for Cassandra](assets/assetscassandra/cassandra7.png) <br> <br>
+
+4. **Masukkan data**
+   ```cassandra
+   cqlsh:latihan> INSERT INTO users (id, name) VALUES (1, 'Fadil');
+   cqlsh:latihan> SELECT * FROM users;
+   ```
+   ![Picture for Cassandra](assets/assetscassandra/cassandra8.png) <br> <br>
+
+5. **Menampilkan status keseluruhan kluster Apache Cassandraa**
+   ```cassandra
+   docker exec -it cassandra-node1 nodetool status
+   ```
+   ![Picture for Cassandra](assets/assetscassandra/cassandra9.png) <br>
+   Perintah nodetool status memastikan cluster udah stabil (UN) dan ada dua node yang terdaftar, berarti cluster 2-node udah up.
+
+
+<br> <br> <br>
+
+
+## Praktikum 2 Pemrosesan Data Besar
+<b> Kasus Studi: Word Count (Menghitung Frekuensi Kata) <b>
+
+*   **Java 8+**: Disdfsfd
+*   **Git**: Dipsdfsd
+*   **Docker** (Opsional): fdsfdsfs
+
+### Sesi 1 MapReduce (Arsitektur Generasi Pertama)
+1. **Mfgagfg**
+   ```bash
+   hdfgdfgds
+   ```
+   ![Picture for ](assets/assets/.png) <br> <br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
