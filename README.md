@@ -24,8 +24,7 @@ Pastikan perangkat lunak berikut sudah terpasang:
    ```bash
    hdfs dfs -mkdir /praktikum
    ```
-   ![Picture for HDFS](assets/assetshdfs/hdfs1.png)
-   Direkomendasikan memastikan direktori belum ada dengan `hdfs dfs -ls /`. <br> <br>
+   ![Picture for HDFS](assets/assetshdfs/hdfs1.png) <br> <br>
 
 2. **Membuat sebuah file beserta dummy data pada file datasest.csv**
    ```bash
@@ -41,7 +40,7 @@ Pastikan perangkat lunak berikut sudah terpasang:
     12352,Hadi,Sistem Informasi,3.55
     EOF
    ```
-   ![Picture for HDFS](assets/assets/hdfs2.png) <br> <br>
+   ![Picture for HDFS](assets/assetshdfs/hdfs2.png) <br> <br>
 
 3. **Mengunggah dataset ke HDFS & Verfikasi isi direktori**
    ```bash
