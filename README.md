@@ -25,7 +25,7 @@ Pastikan perangkat lunak berikut sudah terpasang:
    hdfs dfs -mkdir /praktikum
    ```
    ![Picture for HDFS](assets/hdfs1.png)
-   Direkomendasikan memastikan direktori belum ada dengan `hdfs dfs -ls /`.
+   Direkomendasikan memastikan direktori belum ada dengan `hdfs dfs -ls /`. <br> <br>
 
 2. **Membuat sebuah file beserta dummy data pada file datasest.csv**
    ```bash
@@ -41,19 +41,20 @@ Pastikan perangkat lunak berikut sudah terpasang:
     12352,Hadi,Sistem Informasi,3.55
     EOF
    ```
-   ![Picture for HDFS](assets/hdfs2.png)
+   ![Picture for HDFS](assets/hdfs2.png) <br> <br>
 
 3. **Mengunggah dataset ke HDFS & Verfikasi isi direktori**
    ```bash
+   ## Perintah untuk upload dataset ke hdfs
    hdfs dfs -put dataset.csv /praktikum/
-   ```
-   ```bash
+
+   ## Perintah untuk memeriksa isi dari direktori praktikum
    hdfs dfs -ls /praktikum/
    ```
-   ![Picture for HDFS](assets/hdfs3.png)
+   ![Picture for HDFS](assets/hdfs3.png) <br> <br>
 
 4. **Membaca isi dataset langsung dari HDFS**
    ```bash
    hdfs dfs -cat /praktikum/dataset.csv
    ```
-   ![Picture for HDFS](assets/hdfs4.png)
+   ![Picture for HDFS](assets/hdfs4.png) <br> <br>
