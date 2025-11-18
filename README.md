@@ -276,7 +276,7 @@ File bigfile.dat berukuran 150MB (157,286,400 bytes) dipecah oleh HDFS menjadi 2
    ```bash
    hdfgdfgds
    ```
-   ![Picture for ](assets/assets/.png) <br> <br>
+   ![Picture for ](assets/assetsmapreduce/mapreduce1.png) <br> <br>
 
 
 
