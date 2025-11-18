@@ -121,4 +121,79 @@ File bigfile.dat berukuran 150MB (157,286,400 bytes) dipecah oleh HDFS menjadi 2
    ```
    ![Picture for MongoDB](assets/assetsmongodb/mongo5.png) <br> <br>
 
+6. **Membuat indeks pada kolom NIM agar query cepat**
+   ```mongodb
+   db.
+   ```
+   ![Picture for MongoDB](assets/assetsmongodb/mongo6.png) <br> <br>
+
+7. **Menampilkan data secara urut berdasarkan nama (A-Z)**
+   ```mongodb
+   db.mahasiswa.find().sort({ nama: 1 })
+   ```
+   ![Picture for MongoDB](assets/assetsmongodb/mongo7.png) <br> <br>
+
+
+#### Latihan: coba simpan data dalam bentuk nested JSON (misalnya biodata dengan alamat & kontak).
+1. **Membuat data dalam bentuk nested JSON**
+   ```mongodb
+   db.mahasiswa.insertOne({
+    nim: "312310617",
+    nama: "Fadil",
+    jurusan: "Informatika",
+    alamat: {
+        jalan: "Jl. Sudirman No. 45",
+        kota: "Jakarta",
+        kodePos: "12190"
+    },
+    kontak: {
+        email: "fadil@email.com",
+        telepon: "08123456789"
+    },
+    nilai: [
+        { matkul: "Cybersecurity", skor: 95 },
+        { matkul: "Big Data", skor: 90 },
+        { matkul: "Web Programming", skor: 88 }
+    ]
+   })
+   ```
+   ![Picture for MongoDB](assets/assetsmongodb/mongo8.png) <br> <br>
+
+   2. **Menampilkan data yang telah dibuat dalam bentuk nested json dengan menggunakan query nested field**
+   ```mongodb
+   db.mahasiswa.find({ "alamat.kota": "Jakarta" })
+   ```
+   ![Picture for MongoDB](assets/assetsmongodb/mongo9.png)
+
+   <br> <br>
+
+
+
+### Bagian 3 Praktikum Cassandra
+1. **Mem**
+   ```cassandra
+   use 
+   ```
+   ![Picture for MongoDB](assets/assetscassandra/cassandra1.png) <br>
+   Pastikan database otomatis dibuat saat perintah insert pertama dijalankan. <br> <br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
