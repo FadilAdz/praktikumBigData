@@ -265,18 +265,48 @@ File bigfile.dat berukuran 150MB (157,286,400 bytes) dipecah oleh HDFS menjadi 2
 
 
 ## Praktikum 2 Pemrosesan Data Besar
-<b> Kasus Studi: Word Count (Menghitung Frekuensi Kata) <b>
+**Kasus Studi: Word Count (Menghitung Frekuensi Kata)** <br>
 
-*   **Java 8+**: Disdfsfd
-*   **Git**: Dipsdfsd
-*   **Docker** (Opsional): fdsfdsfs
+**Prasyarat Lingkungan**
+*   Kluster Hadoop (atau single-node setup dengan HDFS).
+*   Instalasi Apache Spark (preferensi Spark 3.x+).
+*   Bahasa Pemrograman: Python (untuk Hadoop Streaming dan PySpark).
+*   File data teks besar (input.txt). <br>
 
 ### Sesi 1 MapReduce (Arsitektur Generasi Pertama)
-1. **Mfgagfg**
+MapReduce (MR) adalah model berbasis disk yang diimplementasikan di Hadoop. Kita akan menggunakan **Hadoop Streaming** yang memungkinkan mapper dan reducer ditulis dalam Python
+
+1. **Buat direktori di HDFS untuk input**
    ```bash
-   hdfgdfgds
+   ## Buat Direktori
+   hdfs dfs -mkdir -p /user/root/latihan_mr/input
+
+   ## Upload file input.txt ke folder tujuan
+   hdfs dfs -put input.txt /user/latihan_mr/input
+
+   ## Lalu periksa apakah berhasil / tidak
+   hdfs dfs -ls /user/latihan_mr/input
    ```
    ![Picture for ](assets/assetsmapreduce/mapreduce1.png) <br> <br>
+
+2. **Kode Mapper (Python)**
+   ```py
+   #!/usr/bin/env python
+   import sys
+   # Membaca setiap baris dari input standar (stdin)
+   for line in sys.stdin:
+       # Hapus spasi di awal/akhir dan pisahkan kata
+       words = line.strip().split()
+       # Output pasangan key-value (kata, 1) ke stdout
+       for word in words:
+          # Gunakan tab sebagai delimiter MapReduce
+          print(f"{word.lower()}\t1") 
+   ```
+   ![Picture for ](assets/assetsmapreduce/mapreduce2.png) <br>
+   Buat file mapper.py. Tugasnya adalah mengubah setiap baris menjadi pasangan (kata, 1).<br> <br>
+
+
+   
 
 
 
