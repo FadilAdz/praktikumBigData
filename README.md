@@ -308,20 +308,22 @@ MapReduce (MR) adalah model berbasis disk yang diimplementasikan di Hadoop. Kita
 3. **Kode Reducer (Python)**
    ```py
    #!/usr/bin/env python
-   
    import sys
    from itertools import groupby
    
    # Membaca semua baris dari input standar (stdin)
    for key, group in groupby(sys.stdin, key=lambda x: x.split('\t', 1)[0]):
        try:
-          total_count = sum(int(line.split('\t', 1)[1].strip()) for line in group)
-   
-          # Output hasil akhir: (kata, total_count)
-          print(f"{key}\t{total_count}")
-      except ValueError:
-          # Handle jika ada data yang tidak valid
-          pass
+           total_count = sum(
+               int(line.split('\t', 1)[1].strip())
+               for line in group
+           )
+           # Output hasil akhir: (kata, total_count)
+           print(f"{key}\t{total_count}")
+       except ValueError:
+           # Handle jika ada data yang tidak valid
+           pass
+
    ```
    ![Picture for ](assets/assetsmapreduce/mapreduce3.png) <br>
    Buat file reducer.py. Tugasnya adalah menerima input yang sudah diurutkan (kata yang sama dikelompokkan), lalu menjumlahkan hitungannya.<br> <br>
