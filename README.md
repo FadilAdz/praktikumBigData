@@ -325,7 +325,7 @@ MapReduce (MR) adalah model berbasis disk yang diimplementasikan di Hadoop. Kita
            pass
 
    ```
-   ![Picture for ](assets/assetsmapreduce/mapreduce.png) <br>
+   ![Picture for ](assets/assetsmapreduce/mapreduce3.png) <br>
    Buat file reducer.py. Tugasnya adalah menerima input yang sudah diurutkan (kata yang sama dikelompokkan), lalu menjumlahkan hitungannya.<br> <br>
 
 4. **Eksekusi MapReduce**
