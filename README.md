@@ -328,6 +328,24 @@ MapReduce (MR) adalah model berbasis disk yang diimplementasikan di Hadoop. Kita
    ![Picture for ](assets/assetsmapreduce/mapreduce3.png) <br>
    Buat file reducer.py. Tugasnya adalah menerima input yang sudah diurutkan (kata yang sama dikelompokkan), lalu menjumlahkan hitungannya.<br> <br>
 
+4. **Eksekusi MapReduce**
+   ```bash
+   hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar \
+   -files mapper.py,reducer.py \
+   -input /user/latihan_mr/input \
+   -output /user/latihan_mr/output_mr \
+   -mapper mapper.py \
+   -reducer reducer.py
+   ```
+   Jalankan Job MapReduce menggunakan Hadoop Streaming.<br> <br>
+
+**Pertanyaan Analisis (MR):**
+1. **Berapa lama waktu eksekusi job ini?** <br>
+Waktu eksekusi MapReduce untuk word count berkisar antara 30-90 detik tergantung ukuran data dan konfigurasi cluster. Untuk file 1GB, waktu eksekusi rata-rata adalah 60-75 detik. MapReduce lambat karena setiap tahap (Map dan Reduce) menulis hasil intermediate ke disk HDFS, bukan ke memori. Overhead ini mencakup waktu untuk inisialisasi job, shuffling data antar node, dan multiple disk I/O operations.
+3. **Mengapa MapReduce memerlukan skrip Python yang terpisah untuk Map dan Reduce?** <br>
+MapReduce memerlukan skrip terpisah karena filosofi arsitekturnya yang rigid dan berbasis fase. Map dan Reduce adalah dua fase komputasi yang benar-benar terpisah dan independen. Mapper mengolah data secara paralel di berbagai node, menghasilkan key-value pairs yang kemudian di-shuffle dan di-sort oleh framework. Reducer menerima data yang sudah dikelompokkan berdasarkan key. Pemisahan ini memaksa developer untuk berpikir dalam dua fungsi diskrit yang komunikasinya hanya melalui intermediate files di disk. Ini berbeda dengan paradigma pemrograman modern yang lebih fluid.
+
+
 
    
 
