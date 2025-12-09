@@ -345,9 +345,143 @@ Waktu eksekusi MapReduce untuk word count berkisar antara 30-90 detik tergantung
 3. **Mengapa MapReduce memerlukan skrip Python yang terpisah untuk Map dan Reduce?** <br>
 MapReduce memerlukan skrip terpisah karena filosofi arsitekturnya yang rigid dan berbasis fase. Map dan Reduce adalah dua fase komputasi yang benar-benar terpisah dan independen. Mapper mengolah data secara paralel di berbagai node, menghasilkan key-value pairs yang kemudian di-shuffle dan di-sort oleh framework. Reducer menerima data yang sudah dikelompokkan berdasarkan key. Pemisahan ini memaksa developer untuk berpikir dalam dua fungsi diskrit yang komunikasinya hanya melalui intermediate files di disk. Ini berbeda dengan paradigma pemrograman modern yang lebih fluid.
 
+<br> <br>
 
 
+
+### Sesi 2 Spark RDD (Arsitektur Generasi Kedua)
+RDD menggunakan in-memory computation dan API fungsional. Kita akan menggunakan **PySpark Shell** atau skrip Python.
+
+
+1. **Nyalakan & Testing Pyspark Terlebih Dahulu**
+   ```bash
+   # Test import PySpark (tanpa tanda seru di akhir)
+   python3 -c "from pyspark.sql import SparkSession; print('PySpark OK')"
+   pyspark
+   ```
+   ![Picture for ](assets/assetssparkrdd/sparkrdd1.png) ![Picture for ](assets/assetssparkrdd/sparkrdd2.png) <br> <br>
+
+2. **Implementasi Word Count RDD**
+   ```bash
+   # 1. Muat data dari HDFS atau sistem file lokal ke RDD
+   lines_rdd = spark.sparkContext.textFile("input.txt")
    
+   # 2. Rantai Transformasi untuk Word Count
+   # flatMap: Memisahkan baris menjadi kata-kata
+   words_rdd = lines_rdd.flatMap(lambda line: line.lower().split(" "))
+   
+   # map: Membuat pasangan (kata, 1)
+   pairs_rdd = words_rdd.map(lambda word: (word, 1))
+   
+   # reduceByKey: Menjumlahkan nilai untuk kunci yang sama
+   counts_rdd = pairs_rdd.reduceByKey(lambda a, b: a + b)
+   
+   # 3. Aksi: Memicu eksekusi dan mengambil hasilnya (atau menyimpannya)
+   final_counts = counts_rdd.collect()
+   
+   # Tampilkan beberapa hasil
+   for word, count in final_counts[:10]:
+    print(f"{word}: {count}")
+   ```
+<br> <br>
+
+**Pertanyaan Analisis (RDD)**
+1. **Bandingkan sintaks RDD dengan MapReduce. Mana yang lebih ringkas?** <br>
+RDD jauh lebih ringkas dan elegan. MapReduce membutuhkan 2 file terpisah (mapper.py dan reducer.py) dengan total sekitar 30-40 baris kode, plus command-line yang panjang untuk eksekusi. RDD menyelesaikan task yang sama dalam 5-6 baris kode dengan functional chaining yang jelas. RDD menggunakan transformasi deklaratif (flatMap, map, reduceByKey) yang langsung menunjukkan intent, sedangkan MapReduce memerlukan boilerplate code untuk membaca stdin/stdout dan manual parsing. Developer bisa fokus pada logika bisnis, bukan infrastruktur.
+3. **Jika Anda menghapus collect() dan hanya menjalankan transformasi, apa yang terjadi dan mengapa? (Konsep Lazy Evaluation).** <br>
+Tidak ada yang terjadi - tidak ada komputasi yang dieksekusi sama sekali. Ini karena Lazy Evaluation. Spark RDD hanya mendefinisikan execution plan (DAG - Directed Acyclic Graph) saat transformasi dipanggil, tetapi tidak mengeksekusinya. Transformasi seperti flatMap, map, dan reduceByKey hanya membangun lineage graph. Eksekusi baru dimulai ketika action seperti collect(), count(), atau saveAsTextFile() dipanggil. Ini adalah optimasi besar karena Spark bisa menganalisis seluruh pipeline, menggabungkan operasi, dan mengeksekusi dengan cara paling efisien.
+
+<br> <br>
+
+
+
+### Sesi 3 Spark DataFrame (Arsitektur Generasi Ketiga)
+DataFrame menggunakan abstraksi terstruktur dan API relasional/SQL, memanfaatkan **Catalyst Optimizer**.
+
+1. **Nyalakan & Testing Pyspark Terlebih Dahulu**
+   ```bash
+   # Test import PySpark (tanpa tanda seru di akhir)
+   python3 -c "from pyspark.sql import SparkSession; print('PySpark OK')"
+   pyspark
+   ```
+   ![Picture for ](assets/assetssparkrdd/sparkrdd1.png) ![Picture for ](assets/assetssparkrdd/sparkrdd2.png) <br> <br>
+
+2. **Import fungsi Spark SQL**
+   ```bash
+   from pyspark.sql.functions import explode, split, col
+   ```
+   ![Picture for ](assets/assetssparkdataframe/sparkdataframe1.png) <br> <br>
+
+3. **Implementasi Word Count DataFrame**
+   ```bash
+   # 1. Muat data sebagai DataFrame (kolom 'value' otomatis dibuat)
+   df = spark.read.text("input.txt")
+   
+   # 2. Transformasi DataFrame (menggunakan API relasional)
+   words_df = df.select(
+    explode(split(col("value"), " ")).alias("word")
+   ).filter(col("word") != "") # Filter kata kosong
+   
+   # 3. Agregasi: Grouping dan Counting
+   counts_df = words_df.groupBy("word").count()
+   
+   # 4. Aksi: Menampilkan dan Mengurutkan Hasil
+   counts_df.orderBy(col("count").desc()).show(10)
+   
+   # Coba dengan SQL (opsional)
+   # counts_df.createOrReplaceTempView("word_counts")
+   # spark.sql("SELECT word, count FROM word_counts ORDER BY count DESC LIMIT
+   10").show()
+   ```
+<br> <br>
+
+**Pertanyaan Analisis (Data Frame)**
+1. **Mengapa DataFrame (meskipun kode di belakangnya lebih kompleks) terasa lebih mudah dan intuitif dari pada RDD bagi seorang analis data?** <br>
+DataFrame menggunakan paradigma SQL dan tabel relasional yang sudah familiar bagi analis data. API-nya (select, groupBy, count, orderBy) sangat mirip dengan SQL yang merupakan bahasa standar industri untuk analisis data. Analis tidak perlu memahami functional programming atau lambda functions yang kompleks. DataFrame juga memiliki schema yang eksplisit - setiap kolom punya nama dan tipe data, membuat data lebih mudah dipahami. Sintaksnya deklaratif dan self-documenting: groupBy("word").count() langsung menjelaskan apa yang dilakukan tanpa perlu memahami implementasi internal.
+
+2. **Jelaskan peran Catalyst Optimizer dalam transformasi ini (misalnya, bagaimana ia mengoptimalkan langkah explode dan groupBy).** <br>
+Catalyst Optimizer menganalisis seluruh query plan dan melakukan optimasi multi-level sebelum eksekusi. Untuk word count, Catalyst akan:
+
+   - **Predicate Pushdown**: Memindahkan filter col("word") != "" sedekat mungkin dengan sumber data untuk mengurangi data yang diproses
+   - **Projection Pruning**: Hanya membaca kolom "value" yang diperlukan, bukan seluruh record
+   - **Operation Fusion**: Menggabungkan operasi split dan explode menjadi satu physical operation untuk menghindari intermediate materialization
+   - **Code Generation**: Menggunakan Tungsten untuk generate optimized bytecode yang langsung dieksekusi oleh JVM, mengurangi overhead function calls
+   - **Physical Plan Selection**: Memilih strategi agregasi terbaik (hash-based vs sort-based) berdasarkan estimasi ukuran data
+   
+   Hasilnya adalah eksekusi yang 2-3x lebih cepat dibanding RDD untuk operasi yang sama.
+
+<br> <br>
+
+
+
+### Sesi 4 Perbandingan Kinerja dan Kesimpulan
+
+**Benchmark (Pengujian Waktu)** <br>
+Ulangi eksekusi pada dataset besar (misalnya, > 1GB) dan ukur waktu eksekusi untuk RDD dan DataFrame menggunakan time command di shell (untuk MR) dan Spark UI/Python timing (untuk Spark).
+
+| Teknologi                        | Waktu Eksekusi | Penjelasan Kinerja                                                                                                                                                                                                      |
+| -------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **MapReduce (Hadoop Streaming)** | Paling lambat  | Seluruh tahap *Map*, *Shuffle*, dan *Reduce* intensif menggunakan disk—setiap langkah membaca dan menulis ke HDFS. Overhead I/O sangat besar. Cocok untuk batch besar, tetapi kurang efisien untuk analitik interaktif. |
+| **Spark RDD**                    | Lebih cepat    | Menggunakan **in-memory processing** sehingga tidak perlu menulis ke disk di setiap tahap. Namun tetap mengeksekusi transformasi secara low-level tanpa optimasi query.                                                 |
+| **Spark DataFrame**              | Paling cepat   | Memanfaatkan **Catalyst Optimizer**, **tungsten execution engine**, dan optimasi skema. Operator seperti `explode`, `groupBy`, dan `count` dieksekusi dengan pipeline vektor yang sangat efisien di memori.             |
+
+Secara praktis, urutan kecepatannya hampir selalu:
+```bash
+DataFrame  >  RDD  >  MapReduce
+```
+
+<br>
+   
+ **Diskusi Akhir** <br>
+ Ketiga teknologi menggunakan tingkat abstraksi yang sangat berbeda:
+
+ | Teknologi           | Abstraksi                      | Kelebihan                                                                      | Kekurangan                                                         |
+| ------------------- | ------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| **MapReduce**       | Key–Value Pair (sangat rendah) | Fleksibel dan basic; cocok dataset sangat besar di HDFS                        | Perlu file mapper & reducer terpisah; verbose; banyak boilerplate. |
+| **Spark RDD**       | Kumpulan objek terdistribusi   | Lebih mudah dari MapReduce; mendukung transformasi fungsional                  | Tidak memiliki informasi skema → tidak bisa dioptimasi otomatis.   |
+| **Spark DataFrame** | Tabel terstruktur dengan skema | Tingkat abstraksi paling tinggi; sintaks mirip SQL; mudah dipahami analis data | Kurang fleksibel jika struktur data sangat aneh atau kompleks.     |
+
+ 
 
 
 
