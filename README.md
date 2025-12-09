@@ -481,8 +481,46 @@ DataFrame  >  RDD  >  MapReduce
 | **Spark RDD**       | Kumpulan objek terdistribusi   | Lebih mudah dari MapReduce; mendukung transformasi fungsional                  | Tidak memiliki informasi skema → tidak bisa dioptimasi otomatis.   |
 | **Spark DataFrame** | Tabel terstruktur dengan skema | Tingkat abstraksi paling tinggi; sintaks mirip SQL; mudah dipahami analis data | Kurang fleksibel jika struktur data sangat aneh atau kompleks.     |
 
- 
+Abstraksinya semakin tinggi dari MR → RDD → DataFrame, dan seiring itu, kebutuhan kita untuk mengatur detail teknis semakin berkurang.
 
+1. **Abstraksi**: Bandingkan tingkat abstraksi (Kunci/Nilai vs. Objek vs. Skema).
+-> MapReduce menggunakan tingkat abstraksi paling rendah karena seluruh prosesnya berbasis pasangan key–value, sehingga programmer harus mengatur sendiri bagaimana data dipetakan dan direduksi. Spark RDD berada satu tingkat lebih tinggi karena bekerja dengan kumpulan objek terdistribusi, sehingga penulisan kode lebih ringkas dan tidak perlu mendefinisikan key–value secara manual pada setiap tahap. Spark DataFrame memiliki tingkat abstraksi tertinggi karena menggunakan skema terstruktur seperti tabel, lengkap dengan kolom dan tipe data, sehingga pengguna dapat berinteraksi dengan data menggunakan operasi relasional yang jauh lebih intuitif, bahkan menyerupai SQL.
+
+2. **Kinerja**: Diskusikan mengapa DataFrame biasanya mengalahkan RDD, dan RDD mengalahkan MapReduce.
+-> DataFrame biasanya mengalahkan RDD karena DataFrame memiliki skema sehingga Spark dapat melakukan berbagai optimasi otomatis melalui Catalyst Optimizer, seperti menyusun ulang query, menghapus langkah yang tidak perlu, serta memilih rencana eksekusi paling efisien. Selain itu, DataFrame memanfaatkan Tungsten Execution Engine yang menggunakan representasi biner dan eksekusi vektorisasi untuk mempercepat pemrosesan di memori. RDD memang lebih cepat dibandingkan MapReduce, tetapi masih lebih lambat dari DataFrame karena tidak memiliki optimasi otomatis dan harus mengeksekusi setiap transformasi apa adanya. Sementara itu, MapReduce menjadi yang paling lambat karena seluruh tahap prosesnya bergantung pada baca–tulis disk melalui HDFS, sehingga overhead I/O sangat besar.
+
+3. **Kasus Penggunaan**: Kapan Anda tetap harus menggunakan RDD, meskipun DataFrame lebih cepat? (Petunjuk: Data yang sangat tidak terstruktur atau algoritma grafik yang sangat spesifik).
+-> Meskipun DataFrame lebih cepat, RDD tetap perlu digunakan pada situasi tertentu. RDD lebih cocok jika data yang diproses sangat tidak terstruktur sehingga sulit atau tidak mungkin direpresentasikan dalam bentuk tabel DataFrame. Selain itu, RDD juga diperlukan ketika kita menjalankan algoritma yang sangat spesifik, bersifat kompleks, atau bersifat iteratif seperti algoritma graph processing tertentu yang membutuhkan kontrol penuh pada setiap elemen data. Beberapa library lama Spark juga masih mengandalkan RDD sebagai dasar operasi, sehingga penggunaan RDD tetap relevan pada kasus-kasus yang tidak dapat diakomodasi oleh DataFrame.
+
+
+<br> <br> <br>
+
+
+## Praktikum 3 Data Integrasi
+**Data Ingestion** adalah langkah fundamental dalam setiap proyek Big Data. Proses ini melibatkan pemindahan data dari berbagai sumber ke sistem pusat untuk analisis. Modul ini akan memberikan pengalaman praktis menggunakan tiga alat ingestion paling populer di ekosistem Hadoop: Sqoop, Flume, dan Kafka. <br>
+
+**Prasyarat Lingkungan**
+● Sistem Operasi Linux (disarankan Ubuntu/CentOS) atau VM dengan Hadoop.
+● Hadoop (HDFS & MapReduce/YARN) sudah terinstal dan berjalan.
+● Java Development Kit (JDK) 8+.
+● MySQL Server terinstal.
+● Apache Sqoop, Flume, dan Kafka sudah diunduh dan diekstrak.
+● Pengetahuan dasar perintah baris Linux.
+
+### Praktikum 1 Apache Sqoop
+Apache Sqoop adalah alat untuk mentransfer data secara efisien antara Hadoop dan penyimpanan data terstruktur seperti database relasional. Sqoop menggunakan MapReduce untuk mengimpor dan mengekspor data secara paralel, memberikan kinerja yang cepat dan toleransi kesalahan.
+
+**Skenario Praktikum**
+Kita akan mengimpor data tabel employees dari database MySQL ke dalam direktori di HDFS.
+
+1. **Persiapan Database MySQL**
+   ```sql
+   CREATE DATABASE company;
+   USE company;
+   CREATE TABLE employees (id INT, name VARCHAR(50));
+   INSERT INTO employees VALUES (1, 'Andi'), (2, 'Budi'), (3, 'Citra');
+   ```
+   ![Picture for ](assets/assetsapachesqoop/apachesqoop1.png) <br> <br>
 
 
 
