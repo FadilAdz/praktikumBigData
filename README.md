@@ -609,7 +609,7 @@ Coba buat file di HDFS, lalu gunakan perintah sqoop export untuk memindahkannya 
 Apache Flume adalah layanan untuk mengumpulkan dan memindahkan data log dalam jumlah besar. Arsitekturnya didasarkan pada agent yang terdiri dari Source, Channel, dan Sink. Dan disini kita akan membuat Flume agent yang mendengarkan data yang dikirim melalui port jaringan (Netcat) dan menampilkannya di konsol (Logger Sink).
 
 **Langkah-langkah Konfigurasi Agent**
-1. **Buat File Konfigurasi**
+1. **Buat File Konfigurasi** <br>
    Buat file bernama netcat-logger.conf di dalam direktori conf Flume. Dan isi dengan konfigurasi berikut: <br>
    ```flume
    # Agent components
@@ -649,7 +649,7 @@ Apache Flume adalah layanan untuk mengumpulkan dan memindahkan data log dalam ju
    ```
    ![Picture for ](assets/assetsapacheflume/apacheflume3.png) <br> <br>
 
-4. **Verifikasi Output**
+4. **Verifikasi Output** <br>
    Kembali ke terminal pertama (tempat Flume berjalan). Anda akan melihat output log yang menampilkan pesan yang baru saja Anda kirim. Ini menunjukkan Sink logger berfungsi. <br> <br>
    ![Picture for ](assets/assetsapacheflume/apacheflume4.png) <br> <br>
 
