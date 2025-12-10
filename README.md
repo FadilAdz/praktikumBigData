@@ -705,7 +705,7 @@ Apache Kafka adalah platform streaming pesan terdistribusi. Producer mengirim pe
      --topic uji-praktikum \
      --bootstrap-server localhost:9092
    ```
-   Masih di Terminal 3, jalankan producer. Setalah itu prompt akan berubah jadi `>` dan sekarang ketik beberapa pesan <br>
+   Masih di Terminal 3, jalankan producer. Setalah itu prompt akan berubah jadi `>` dan sekarang ketik beberapa pesan <br> <br>
    ![Picture for ](assets/assetsapachekafka/apachekafka4.png) <br> <br>
 
 4. **Jalankan Console Consumer**
@@ -715,7 +715,7 @@ Apache Kafka adalah platform streaming pesan terdistribusi. Producer mengirim pe
      --from-beginning \
      --bootstrap-server localhost:9092
    ```
-   Buka terminal keempat dan jalankan consumer untuk membaca pesan dari awal <br>
+   Buka terminal keempat dan jalankan consumer untuk membaca pesan dari awal <br> <br>
    ![Picture for ](assets/assetsapachekafka/apachekafka5.png) <br> <br>
 
 **Perbedaan Sqoop, Flume, dan Kafka**
