@@ -553,6 +553,9 @@ Kita akan mengimpor data tabel employees dari database MySQL ke dalam direktori 
    ![Picture for ](assets/assetsapachesqoop/apachesqoop3.png) <br>
    Dan Sudah terlihat bahwa, telah berhasil import data tersebut menggunakan sqoop import. <br> <br>
 
+#### Latihan Tambahan Export Data
+Coba buat file di HDFS, lalu gunakan perintah sqoop export untuk memindahkannya kembali ke tabel baru di MySQL.
+
 
 
 
