@@ -1,4 +1,4 @@
-<img width="1235" height="561" alt="image" src="https://github.com/user-attachments/assets/581b8baa-c4a8-4f41-8af9-e9bbc0f87a4c" /># Laporan Praktikum Big Data
+# Laporan Praktikum Big Data
 Repository ini berisi rangkaian praktikum Big Data yang mencakup penyimpanan terdistribusi (HDFS, MongoDB, Cassandra), pemrosesan data skala besar menggunakan MapReduce dan Apache Spark, pembangunan pipeline ingestion dengan Sqoop, Flume, dan Kafka, serta proses pra-pemrosesan dan feature engineering menggunakan PySpark sebagai dasar pemahaman ekosistem Big Data secara menyeluruh.
 
 <br> 
