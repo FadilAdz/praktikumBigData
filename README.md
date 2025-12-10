@@ -590,7 +590,7 @@ Coba buat file di HDFS, lalu gunakan perintah sqoop export untuk memindahkannya 
    - `-m 1` = jumlah mapper
    
    Tunggu prosesnya selesai...Kamu harusnya lihat output seperti:
-   25/12/10 xx:xx:xx INFO mapreduce.ExportJobBase: Exported 3 records. <br>
+   25/12/10 xx:xx:xx INFO mapreduce.ExportJobBase: Exported 3 records. <br> <br>
    ![Picture for ](assets/assetsapachesqoop/apachesqoop5.png) <br> <br>
 
 3. **Terakhir Kita Harus Verifikasi Data Yang Sudah Di Import ke MySQL**
