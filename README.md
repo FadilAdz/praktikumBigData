@@ -1,4 +1,4 @@
-# Laporan Praktikum Big Data
+<img width="1235" height="561" alt="image" src="https://github.com/user-attachments/assets/581b8baa-c4a8-4f41-8af9-e9bbc0f87a4c" /># Laporan Praktikum Big Data
 Repository ini berisi rangkaian praktikum Big Data yang mencakup penyimpanan terdistribusi (HDFS, MongoDB, Cassandra), pemrosesan data skala besar menggunakan MapReduce dan Apache Spark, pembangunan pipeline ingestion dengan Sqoop, Flume, dan Kafka, serta proses pra-pemrosesan dan feature engineering menggunakan PySpark sebagai dasar pemahaman ekosistem Big Data secara menyeluruh.
 
 <br> 
@@ -513,6 +513,7 @@ Apache Sqoop adalah alat untuk mentransfer data secara efisien antara Hadoop dan
 **Skenario Praktikum**
 Kita akan mengimpor data tabel employees dari database MySQL ke dalam direktori di HDFS.
 
+**Langkah-langkah Praktikum Import Data**
 1. **Persiapan Database MySQL**
    ```sql
    CREATE DATABASE company;
@@ -521,6 +522,37 @@ Kita akan mengimpor data tabel employees dari database MySQL ke dalam direktori 
    INSERT INTO employees VALUES (1, 'Andi'), (2, 'Budi'), (3, 'Citra');
    ```
    ![Picture for ](assets/assetsapachesqoop/apachesqoop1.png) <br> <br>
+
+2. **Verifikasi Koneksi Sqoop Ke MYSQL**
+      ```bash
+   sqoop list-databases \
+     --connect jdbc:mysql://172.17.0.2:3306/ \
+     --username root 
+   ```
+   ![Picture for ](assets/assetsapachesqoop/apachesqoop2.png) <br>
+   Pastikan Anda telah mengunduh konektor JDBC MySQL (mysql-connector-java-*.jar) dan meletakkannya di direktori lib pada instalasi Sqoop. <br> <br>
+   
+4. **Jalankan Perintah Sqoop Import**
+   - Buka terminal, navigasi ke direktori instalasi Sqoop.
+   - Jalankan perintah berikut (sesuaikan dengan konfigurasi Anda) <br> <br>
+   ```bash
+   sqoop import --connect jdbc:mysql://172.17.0.2:3306/company --username root --table employees --target-dir /user/hadoop/employees -m 1
+   ```
+
+   ■ --connect: URL koneksi ke database. <br>
+   ■ --username: Kredensial database. <br>
+   ■ --table: Nama tabel yang akan diimpor. <br>
+   ■ --target-dir: Lokasi tujuan di HDFS. <br>
+   ■ -m 1: Menentukan jumlah mapper (proses paralel). <br> <br>
+
+5. **Verifikasi Hasil HDFS**
+   ```bash
+   hdfs dfs -ls /user/hadoop/employees
+   hdfs dfs -cat /user/hadoop/employees/part-m-00000
+   ```
+   ![Picture for ](assets/assetsapachesqoop/apachesqoop3.png) <br>
+   Dan Sudah terlihat bahwa, telah berhasil import data tersebut menggunakan sqoop import. <br> <br>
+
 
 
 
