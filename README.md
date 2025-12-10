@@ -651,8 +651,79 @@ Apache Flume adalah layanan untuk mengumpulkan dan memindahkan data log dalam ju
 
 4. **Verifikasi Output** <br>
    Kembali ke terminal pertama (tempat Flume berjalan). Anda akan melihat output log yang menampilkan pesan yang baru saja Anda kirim. Ini menunjukkan Sink logger berfungsi. <br> <br>
-   ![Picture for ](assets/assetsapacheflume/apacheflume4.png) <br> <br>
+   ![Picture for ](assets/assetsapacheflume/apacheflume4.png)
 
+<br> <br>
+
+
+
+### Praktikum 3 Apache Kafka
+Apache Kafka adalah platform streaming pesan terdistribusi. Producer mengirim pesan ke Topic, dan Consumer membaca pesan dari Topic tersebut. Dan sekarang Kita akan memulai server Kafka, membuat sebuah topic, mengirim beberapa pesan menggunakan console producer, dan membacanya kembali menggunakan console consumer.
+
+**Langkah-langkah Konfigurasi Agent**
+1. **Jalankan Zookeeper & Kafka Server** <br>
+   - Kafka membutuhkan Zookeeper. Jalankan terlebih dahulu dari direktori Kafka <br> <br>
+   ```kafka
+   bin/zookeeper-server-start.sh config/zookeeper.properties
+   ```
+   Sampai kamu melihat output ini:
+   ```
+   INFO binding to port 0.0.0.0/0.0.0.0:2181
+   ```
+   ![Picture for ](assets/assetsapachekafka/apachekafka1.png) <br> <br>
+   
+   - Buka terminal baru, dan jalankan Kafka Broker <br> <br>
+   ```kafka
+   bin/kafka-server-start.sh config/server.properties
+   ```
+   Sampai kamu melihat output ini:
+   ```
+   INFO [KafkaServer id=0] started
+   ```
+   ![Picture for ](assets/assetsapachekafka/apachekafka2.png) <br> <br>
+
+2. **Buat Kafka Topic & Verifikasi Topic Yang Telah Dibuat** <br>
+   Buka terminal ketiga. Buat topic bernama uji-praktikum <br> <br>
+   ```kafka
+   bin/kafka-topics.sh \
+     --create \
+     --topic uji-praktikum \
+     --bootstrap-server localhost:9092 \
+     --partitions 1 \
+     --replication-factor 1
+   ```
+   
+   Verifikasi topic yang telah dibuat: <br> <br>
+   ```kafka
+   bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+   ```
+   ![Picture for ](assets/assetsapachekafka/apachekafka3.png) <br> <br>
+
+3. **Jalankan Console Producer**
+   ```kafka
+   bin/kafka-console-producer.sh \
+     --topic uji-praktikum \
+     --bootstrap-server localhost:9092
+   ```
+   Masih di Terminal 3, jalankan producer. Setalah itu prompt akan berubah jadi `>` dan sekarang ketik beberapa pesan <br>
+   ![Picture for ](assets/assetsapachekafka/apachekafka4.png) <br> <br>
+
+4. **Jalankan Console Consumer**
+   ```kafka
+   bin/kafka-console-consumer.sh \
+     --topic uji-praktikum \
+     --from-beginning \
+     --bootstrap-server localhost:9092
+   ```
+   Buka terminal keempat dan jalankan consumer untuk membaca pesan dari awal <br>
+   ![Picture for ](assets/assetsapachekafka/apachekafka5.png) <br> <br>
+
+**Perbedaan Sqoop, Flume, dan Kafka**
+| **Tool**  | **Fungsi Utama**                                                                                      | **Use Case / Kapan Digunakan**                                                                                  |
+| --------- | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Sqoop** | Melakukan *batch transfer* antara database relasional dan Hadoop (HDFS, Hive).                        | Import data dari MySQL → HDFS/Hive, atau export hasil Hadoop → database. Cocok untuk data yang tidak real-time. |
+| **Flume** | Mengumpulkan, mengirim, dan menggabungkan data streaming seperti log secara terus-menerus.            | Mengambil log server/aplikasi secara real-time → HDFS. Ideal untuk pipeline log.                                |
+| **Kafka** | Platform *distributed message queue* untuk streaming, messaging, dan event processing berskala besar. | Real-time data pipeline, event streaming, sensor data, integrasi antar sistem dengan throughput tinggi.         |
 
 
 
