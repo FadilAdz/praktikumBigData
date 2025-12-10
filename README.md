@@ -508,10 +508,7 @@ Abstraksinya semakin tinggi dari MR → RDD → DataFrame, dan seiring itu, kebu
 ● Pengetahuan dasar perintah baris Linux.
 
 ### Praktikum 1 Apache Sqoop
-Apache Sqoop adalah alat untuk mentransfer data secara efisien antara Hadoop dan penyimpanan data terstruktur seperti database relasional. Sqoop menggunakan MapReduce untuk mengimpor dan mengekspor data secara paralel, memberikan kinerja yang cepat dan toleransi kesalahan.
-
-**Skenario Praktikum**
-Kita akan mengimpor data tabel employees dari database MySQL ke dalam direktori di HDFS.
+Apache Sqoop adalah alat untuk mentransfer data secara efisien antara Hadoop dan penyimpanan data terstruktur seperti database relasional. Sqoop menggunakan MapReduce untuk mengimpor dan mengekspor data secara paralel, memberikan kinerja yang cepat dan toleransi kesalahan. Dan disini kita akan mengimpor data tabel employees dari database MySQL ke dalam direktori di HDFS.
 
 **Langkah-langkah Praktikum Import Data**
 1. **Persiapan Database MySQL**
@@ -604,6 +601,57 @@ Coba buat file di HDFS, lalu gunakan perintah sqoop export untuk memindahkannya 
 
 **Sqoop** adalah tool untuk transfer data antara database relasional (MySQL) dan Hadoop HDFS, dimana kita berhasil melakukan import data dari tabel MySQL ke HDFS menggunakan perintah `sqoop import`, kemudian melakukan export data dari HDFS kembali ke tabel MySQL baru menggunakan perintah `sqoop export`.
 
+<br> <br>
+
+
+
+### Praktikum 2 Apache Flume
+Apache Flume adalah layanan untuk mengumpulkan dan memindahkan data log dalam jumlah besar. Arsitekturnya didasarkan pada agent yang terdiri dari Source, Channel, dan Sink. Dan disini kita akan membuat Flume agent yang mendengarkan data yang dikirim melalui port jaringan (Netcat) dan menampilkannya di konsol (Logger Sink).
+
+**Langkah-langkah Konfigurasi Agent**
+1. **Buat File Konfigurasi**
+   Buat file bernama netcat-logger.conf di dalam direktori conf Flume. Dan isi dengan konfigurasi berikut: <br>
+   ```flume
+   # Agent components
+   a1.sources = r1
+   a1.sinks = k1
+   a1.channels = c1
+   
+   # Configure the source (Netcat)
+   a1.sources.r1.type = netcat
+   a1.sources.r1.bind = localhost
+   a1.sources.r1.port = 44444
+   
+   # Configure the sink (Logger)
+   a1.sinks.k1.type = logger
+   
+   # Configure the channel (Memory)
+   a1.channels.c1.type = memory
+   a1.channels.c1.capacity = 1000
+   a1.channels.c1.transactionCapacity = 100
+   
+   # Bind the source and sink to the channel
+   a1.sources.r1.channels = c1
+   a1.sinks.k1.channel = c1
+   ```
+   ![Picture for ](assets/assetsapacheflume/apacheflume1.png) <br> <br>
+
+2. **Jalankan Flume agent dengan konfigurasi yang baru dibuat**
+   ```flume
+   flume-ng agent --conf conf --conf-file conf/netcat-logger.conf --name a1 -Dflume.root.logger=INFO,console
+   ```
+   ![Picture for ](assets/assetsapacheflume/apacheflume2.png) <br> <br>
+   **Jangan tutup terminal ini!** Biarkan Flume tetap jalan. Flume sekarang sedang "mendengarkan" di port 44444. <br> <br>
+
+3. **Buka Terminal Baru & Kirim Data/Pesan Menggunakan Telnet**
+   ```telnet
+   telnet localhost 44444
+   ```
+   ![Picture for ](assets/assetsapacheflume/apacheflume3.png) <br> <br>
+
+4. **Verifikasi Output**
+   Kembali ke terminal pertama (tempat Flume berjalan). Anda akan melihat output log yang menampilkan pesan yang baru saja Anda kirim. Ini menunjukkan Sink logger berfungsi. <br> <br>
+   ![Picture for ](assets/assetsapacheflume/apacheflume4.png) <br> <br>
 
 
 
