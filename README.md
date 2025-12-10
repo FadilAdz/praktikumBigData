@@ -556,6 +556,53 @@ Kita akan mengimpor data tabel employees dari database MySQL ke dalam direktori 
 #### Latihan Tambahan Export Data
 Coba buat file di HDFS, lalu gunakan perintah sqoop export untuk memindahkannya kembali ke tabel baru di MySQL.
 
+1. **Buat database startup dan tabel tujuan**
+   ```bash
+   CREATE DATABASE startup;
+   USE startup;
+   
+   -- Buat tabel kosong untuk menampung data export
+   CREATE TABLE employees_backup (
+       id INT,
+       name VARCHAR(50)
+   );
+   
+   -- Cek tabelnya (masih kosong)
+   SELECT * FROM employees_backup;
+   ```
+   ![Picture for ](assets/assetsapachesqoop/apachesqoop4.png) <br> <br>
+
+2. **Export Data dari HDFS ke MySQL**
+   Sekarang kita export data dari HDFS ke tabel employees_backup di database startup
+   ```bash
+   sqoop export \
+   --connect jdbc:mysql://172.17.0.2:3306/startup \
+   --username root \
+   --table employees_backup \
+   --export-dir /user/hadoop/employees \
+   -m 1
+   ```
+   Penjelasan parameter:
+   - `--connect` = URL koneksi ke database **startup**
+   - `--username root` = user MySQL
+   - `--table employees_backup` = tabel tujuan (yang baru kita buat)
+   - `--export-dir /user/hadoop/employees` = direktori sumber di HDFS
+   - `-m 1` = jumlah mapper
+   
+   Tunggu prosesnya selesai...Kamu harusnya lihat output seperti:
+   25/12/10 xx:xx:xx INFO mapreduce.ExportJobBase: Exported 3 records. <br>
+   ![Picture for ](assets/assetsapachesqoop/apachesqoop5.png) <br> <br>
+
+3. **Terakhir Kita Harus Verifikasi Data Yang Sudah Di Import ke MySQL**
+   Cek data di tabel `employees_backup` <br>
+   ![Picture for ](assets/assetsapachesqoop/apachesqoop6.png) <br>
+   
+   ✅ Buat database baru startup di MySQL <br>
+   ✅ Buat tabel kosong employees_backup <br>
+   ✅ Export data dari HDFS ke MySQL menggunakan Sqoop <br>
+   ✅ Verifikasi data berhasil masuk ke MySQL <br>
+
+**Sqoop** adalah tool untuk transfer data antara database relasional (MySQL) dan Hadoop HDFS, dimana kita berhasil melakukan import data dari tabel MySQL ke HDFS menggunakan perintah `sqoop import`, kemudian melakukan export data dari HDFS kembali ke tabel MySQL baru menggunakan perintah `sqoop export`.
 
 
 
