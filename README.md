@@ -17,8 +17,11 @@ Repository ini berisi rangkaian praktikum Big Data yang mencakup penyimpanan ter
 2. [Praktikum 2 Pemrosesan Data Besar](#Praktikum-2-Pemrosesan-Data-Besar)
 3. [Praktikum 3 Data Integrasi](#Praktikum-3-Data-Integrasi)
 4. [Praktikum 4 Data Preprocessing](#Praktikum-4-Data-Preprocessing)
+5. [Praktikum 5 Analisis Data](#Praktikum-5-Analisis-Data)
+6. [Praktikum 6 Spark ML](#Praktikum-6-Spark-ML)
+7. [Praktikum 7 Analisis Streaming Kafka](#Praktikum-7-Analisis-Streaming-Kafka)
 
-<br> <br>
+<br>
 
 ## Praktikum 1 Menggunakan Tools Data Besar
 Pastikan perangkat lunak berikut sudah terpasang:
