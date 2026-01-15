@@ -734,8 +734,107 @@ Apache Kafka adalah platform streaming pesan terdistribusi. Producer mengirim pe
 | **Kafka** | Platform *distributed message queue* untuk streaming, messaging, dan event processing berskala besar. | Real-time data pipeline, event streaming, sensor data, integrasi antar sistem dengan throughput tinggi.         |
 
 
+<br> <br> <br>
 
 
+## Praktikum 4 Data Preprocessing
+**Pra-Pemrosesan Data dengan PySpark di Google Colab** [Klik Disini! Untuk Melihat Hasil Praktik Pada Google Colllab](https://colab.research.google.com/drive/1DtSZqKdxdEEGqyE4eV1rLKbbfG_pr4B_?usp=sharing) <br>
+
+**Persiapan Lingkungan di Google Colab**
+Sebelum memulai, kita perlu menginstal PySpark dan beberapa pustaka pendukung di lingkungan Colab
+```python
+# Instalasi PySpark dan pustaka findspark
+!pip install pyspark findspark
+```
+Setelah instalasi selesai, kita perlu menginisialisasi SparkSession, yang merupakan titik masuk untuk memprogram Spark dengan DataFrame API.
+```python
+mport findspark
+findspark.init()
+
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
+from pyspark.sql.types import *
+
+# Membuat SparkSession
+spark = SparkSession.builder \
+ .master("local[*]") \
+ .appName("PraktikumPreprocessing") \
+ .getOrCreate()
+
+print("SparkSession berhasil dibuat!")
+``` 
+
+
+<br> <br>
+   
+
+#### Latihan 
+Jawablah pertanyaan atau selesaikan instruksi berikut berdasarkan df_bersih yang telah kita buat sebelumnya:
+   1. <b>Agregasi Lanjutan:</b> <br>
+      ○ Kelompokkan data berdasarkan jenis_kelamin dan kota. <br>
+      ○ Hitung gaji maksimum dan usia minimum untuk setiap kelompok. <br>
+   
+   2. <b>Diskretisasi Gaji:</b> <br>
+      ○ Buatlah kategori baru untuk kolom gaji dengan nama level_gaji. <br>
+      ○ Gunakan Bucketizer dengan batasan sebagai berikut: <br>
+         -> Gaji < 7,000,000: "Rendah" <br>
+         -> Gaji 7,000,000 - 15,000,000: "Menengah" <br>
+         -> Gaji > 15,000,000: "Tinggi" <br> <br>
+      ○ Tampilkan kolom gaji dan level_gaji yang baru. <br>
+   
+   3. <b>Feature Engineering Sederhana:</b> <br>
+      ○ Buat fitur interaksi baru bernama usia_x_gaji yang merupakan hasil perkalian antara kolom usia dan gaji. <br>
+      ○ Tampilkan 5 baris pertama dari id_pelanggan, usia, gaji, dan usia_x_gaji. <br>
+
+
+#### Tugas 
+Buatlah sebuah alur pra-pemrosesan data lengkap dari awal menggunakan dataset baru di bawah ini. Lakukan semua langkah yang diperlukan (Data Cleaning, Transformasi, dan Feature Engineering) hingga data siap untuk digunakan oleh model machine learning.
+
+<b>Dataset Tugas: Data Produk Elektronik</b>
+```python
+# Jalankan sel ini untuk membuat DataFrame tugas
+data_produk = [
+ (101, 'Laptop A', 'Elektronik', 15000000, 4.5, 120, '2023-01-20', 'stok_tersedia'),
+ (102, 'Smartphone B', 'Elektronik', 8000000, 4.7, 250, '2023-02-10', 'stok_tersedia'),
+ (103, 'Headphone C', 'Aksesoris', 1200000, 4.2, None, '2023-02-15', 'stok_habis'),
+ (104, 'Laptop A', 'Elektronik', 15000000, 4.5, 120, '2023-01-20', 'stok_tersedia'), # Duplikat
+ (105, 'Tablet D', 'Elektronik', 6500000, None, 80, '2023-03-01', 'stok_tersedia'),
+ (106, 'Charger E', 'Aksesoris', 250000, -4.0, 500, '2023-03-05', 'Stok_Tersedia'), # Rating
+tidak valid & Status inkonsisten
+ (107, 'Smartwatch F', 'Elektronik', 3100000, 4.8, 150, '2023-04-12', 'stok_habis')
+]
+
+skema_produk = StructType([
+ StructField("id_produk", IntegerType()),
+ StructField("nama_produk", StringType()),
+ StructField("kategori", StringType()),
+ StructField("harga", IntegerType()),
+ StructField("rating", FloatType()),
+ StructField("terjual", IntegerType()),
+ StructField("tgl_rilis", StringType()),
+ StructField("status_stok", StringType())
+])
+
+df_tugas = spark.createDataFrame(data=data_produk, schema=skema_produk)
+df_tugas.show()
+```
+
+<b>Instruksi Tugas:</b>
+1. <b>Lakukan Data Cleaning: </b> <br>
+   ○ Tangani nilai yang hilang (None) pada kolom terjual dan rating. Pilih metode imputasi yang menurut Anda paling sesuai. <br>
+   ○ Hapus data duplikat. <br>
+   ○ Perbaiki nilai rating yang tidak valid (negatif). <br>
+   ○ Standarisasi nilai pada kolom status_stok (misalnya, ubah semua menjadi huruf kecil). <br>
+
+2. <b>Lakukan Data Transformasi: </b> <br>
+   ○ Lakukan standarisasi pada kolom numerik (harga, rating, terjual). <br>
+
+3. <b>Lakukan Feature Engineering: </b> <br>
+   ○ Ekstrak fitur bulan_rilis dari kolom tgl_rilis. <br>
+   ○ Lakukan One-Hot Encoding pada kolom kategori dan status_stok. <br>
+
+4. <b>Tampilkan Hasil Akhir: </b> <br>
+   ○ Tampilkan 10 baris pertama dari DataFrame akhir yang telah bersih dan memiliki fitur-fitur baru. Pastikan semua kolom hasil transformasi dan engineering terlihat
 
 
 
