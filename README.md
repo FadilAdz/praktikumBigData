@@ -14,9 +14,9 @@ Repository ini berisi rangkaian praktikum Big Data yang mencakup penyimpanan ter
 
 ## Daftar Isi
 1. [Praktikum 1 Menggunakan Tools Data Besar](#Praktikum-1-Menggunakan-Tools-Data-Besar)
-2. [Praktikum 2](#Praktikum-2)
-3. [Praktikum 3](#Praktikum-3)
-4. [Praktikum 4](#Praktikum-4)
+2. [Praktikum 2 Pemrosesan Data Besar](#Praktikum-2-Pemrosesan-Data-Besar)
+3. [Praktikum 3 Data Integrasi](#Praktikum-3-Data-Integrasi)
+4. [Praktikum 4 Data Preprocessing](#Praktikum-4-Data-Preprocessing)
 
 <br> <br>
 
