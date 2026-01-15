@@ -793,11 +793,43 @@ Jawablah pertanyaan atau selesaikan instruksi berikut berdasarkan df_bersih yang
          -> Gaji 7,000,000 - 15,000,000: "Menengah" <br>
          -> Gaji > 15,000,000: "Tinggi" <br> <br>
       ○ Tampilkan kolom gaji dan level_gaji yang baru. <br>
+
+   ```python
+   from pyspark.ml.feature import Bucketizer
+
+   # Definisikan batasan untuk binning
+   splits_gaji = [0, 7000000, 15000000, float('Inf')]
+   
+   bucketizer_gaji = Bucketizer(
+       splits=splits_gaji, 
+       inputCol="gaji", 
+       outputCol="level_gaji_index"
+   )
+   
+   df_gaji_binned = bucketizer_gaji.transform(df_bersih)
+   
+   # Ubah index menjadi label
+   df_gaji_binned = df_gaji_binned.withColumn("level_gaji",
+       when(col("level_gaji_index") == 0.0, "Rendah")
+       .when(col("level_gaji_index") == 1.0, "Menengah")
+       .when(col("level_gaji_index") == 2.0, "Tinggi")
+       .otherwise("Unknown")
+   )
+   
+   df_gaji_binned.select("id_pelanggan", "nama", "gaji", "level_gaji").show()
+   ```
+   ![Picture for ](assets/assetscollabs/collab2.png) <br> <br>
    
    3. <b>Feature Engineering Sederhana:</b> <br>
       ○ Buat fitur interaksi baru bernama usia_x_gaji yang merupakan hasil perkalian antara kolom usia dan gaji. <br>
       ○ Tampilkan 5 baris pertama dari id_pelanggan, usia, gaji, dan usia_x_gaji. <br>
 
+   ```python
+   df_interaksi = df_bersih.withColumn("usia_x_gaji", col("usia") * col("gaji"))
+
+   df_interaksi.select("id_pelanggan", "usia", "gaji", "usia_x_gaji").show(5)
+   ```
+   ![Picture for ](assets/assetscollabs/collab3.png) <br> <br>
 
 #### Tugas 
 Buatlah sebuah alur pra-pemrosesan data lengkap dari awal menggunakan dataset baru di bawah ini. Lakukan semua langkah yang diperlukan (Data Cleaning, Transformasi, dan Feature Engineering) hingga data siap untuk digunakan oleh model machine learning.
@@ -834,19 +866,114 @@ df_tugas.show()
 <b>Instruksi Tugas:</b>
 1. <b>Lakukan Data Cleaning: </b> <br>
    ○ Tangani nilai yang hilang (None) pada kolom terjual dan rating. Pilih metode imputasi yang menurut Anda paling sesuai. <br>
+   ```python
+   # Hitung median dan mean
+   median_terjual = df_tugas.approxQuantile("terjual", [0.5], 0.01)[0]
+   mean_rating = df_tugas.select(mean("rating")).collect()[0][0]
+   
+   # Imputasi
+   df_tugas_clean = df_tugas.na.fill({
+       'terjual': int(median_terjual),
+       'rating': round(mean_rating, 1)
+   })
+   ```
+   **Hasil:**
+   - terjual yang None → diisi dengan 150 (median)
+   - rating yang None → diisi dengan 4.4 (mean)
+   <br>
+
    ○ Hapus data duplikat. <br>
+   ```python
+   print(f"Jumlah baris sebelum: {df_tugas_clean.count()}")
+   df_tugas_clean = df_tugas_clean.dropDuplicates()
+   print(f"Jumlah baris sesudah: {df_tugas_clean.count()}")
+   ```
+   **Hasil:** 1 baris duplikat (Laptop A) berhasil dihapus → dari 7 menjadi 6 baris
+   <br>
+
    ○ Perbaiki nilai rating yang tidak valid (negatif). <br>
+   ```python
+   df_tugas_clean = df_tugas_clean.withColumn("rating", abs(col("rating")))
+   ```
+   **Hasil:** Rating -4.0 → menjadi 4.0
+   <br>
+
    ○ Standarisasi nilai pada kolom status_stok (misalnya, ubah semua menjadi huruf kecil). <br>
+   ```python
+   df_tugas_clean = df_tugas_clean.withColumn("status_stok", lower(col("status_stok")))
+   ```
+   **Hasil:** ```Stok_Tersedia``` → menjadi ```stok_tersedia``` (konsisten lowercase)
+   <br>
 
 2. <b>Lakukan Data Transformasi: </b> <br>
    ○ Lakukan standarisasi pada kolom numerik (harga, rating, terjual). <br>
+   ```python
+   from pyspark.ml.feature import VectorAssembler, StandardScaler
+   
+   # Gabungkan kolom numerik ke dalam 1 vektor
+   assembler = VectorAssembler(
+       inputCols=["harga", "rating", "terjual"], 
+       outputCol="fitur_numerik"
+   )
+   df_vector = assembler.transform(df_tugas_clean)
+   
+   # Standarisasi
+   scaler = StandardScaler(
+       inputCol="fitur_numerik", 
+       outputCol="fitur_standar",
+       withStd=True, 
+       withMean=True
+   )
+   scaler_model = scaler.fit(df_vector)
+   df_scaled = scaler_model.transform(df_vector)
+   ```
+   **Manfaat Standarisasi:
+   - Semua fitur memiliki skala yang sama
+   - Machine learning model akan bekerja lebih optimal
+   - Menghindari dominasi fitur dengan nilai besar (seperti harga)
+   <br>
 
 3. <b>Lakukan Feature Engineering: </b> <br>
    ○ Ekstrak fitur bulan_rilis dari kolom tgl_rilis. <br>
+   ```python
+   df_fe = df_scaled.withColumn("timestamp_rilis", to_timestamp("tgl_rilis", "yyyy-MM-dd"))
+   df_fe = df_fe.withColumn("bulan_rilis", month("timestamp_rilis"))
+   ```
+   **Hasil:** Kolom baru ```bulan_rilis``` yang mengekstrak bulan dari tanggal
+   - ```'2023-01-20'``` → ```1``` (Januari)
+   - ```'2023-02-10'``` → ```2``` (Februari)
+   <br>
+   
    ○ Lakukan One-Hot Encoding pada kolom kategori dan status_stok. <br>
+   **Step 1: StringIndexer** (String → Index Numerik)
+   ```python
+   from pyspark.ml.feature import StringIndexer, OneHotEncoder
+
+   indexer_kategori = StringIndexer(inputCol="kategori", outputCol="kategori_index")
+   indexer_status = StringIndexer(inputCol="status_stok", outputCol="status_index")
+   
+   df_indexed = indexer_kategori.fit(df_fe).transform(df_fe)
+   df_indexed = indexer_status.fit(df_indexed).transform(df_indexed)
+   ```
+   <br>
+
+   **Step 2: OneHotEncoder** (Index → Vektor Binary)
+   ```python
+   ohe = OneHotEncoder(
+    inputCols=["kategori_index", "status_index"],
+    outputCols=["kategori_ohe", "status_ohe"]
+   )
+   df_encoded = ohe.fit(df_indexed).transform(df_indexed)
+   ```
+   **Penjelasan One-Hot Encoding:**
+   ```Elektronik``` → ```[1.0, 0.0]```
+   ```Aksesoris``` → ```[0.0, 1.0]```
+   Format ini diperlukan agar machine learning model bisa memproses data kategorikal
+   <br>
 
 4. <b>Tampilkan Hasil Akhir: </b> <br>
    ○ Tampilkan 10 baris pertama dari DataFrame akhir yang telah bersih dan memiliki fitur-fitur baru. Pastikan semua kolom hasil transformasi dan engineering terlihat
+   ![Picture for ](assets/assetscollabs/collab4.png) <br> <br>
 
 
 
