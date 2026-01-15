@@ -773,6 +773,18 @@ Jawablah pertanyaan atau selesaikan instruksi berikut berdasarkan df_bersih yang
    1. <b>Agregasi Lanjutan:</b> <br>
       ○ Kelompokkan data berdasarkan jenis_kelamin dan kota. <br>
       ○ Hitung gaji maksimum dan usia minimum untuk setiap kelompok. <br>
+
+   ```python
+   df_agregasi_latihan = df_bersih.groupBy("jenis_kelamin", "kota") \
+    .agg(
+        max("gaji").alias("gaji_maksimum"),
+        min("usia").alias("usia_minimum")
+    ) \
+    .orderBy("jenis_kelamin", "kota")
+
+   df_agregasi_latihan.show()
+   ```
+   ![Picture for ](assets/assetscollabs/collab1.png) <br> <br>
    
    2. <b>Diskretisasi Gaji:</b> <br>
       ○ Buatlah kategori baru untuk kolom gaji dengan nama level_gaji. <br>
