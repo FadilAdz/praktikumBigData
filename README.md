@@ -12,7 +12,15 @@ Repository ini berisi rangkaian praktikum Big Data yang mencakup penyimpanan ter
 
 <br>
 
-## Praktikum 1
+## Daftar Isi
+1. [Praktikum 1 Menggunakan Tools Data Besar](#Praktikum-1-Menggunakan-Tools-Data-Besar)
+2. [Praktikum 2](#Praktikum-2)
+3. [Praktikum 3](#Praktikum-3)
+4. [Praktikum 4](#Praktikum-4)
+
+<br> <br>
+
+## Praktikum 1 Menggunakan Tools Data Besar
 Pastikan perangkat lunak berikut sudah terpasang:
 
 *   **Java 8+**: Diperlukan untuk komponen Hadoop/HDFS.
