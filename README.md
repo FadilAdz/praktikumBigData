@@ -1210,7 +1210,7 @@ Praktikum ini memperkenalkan Streaming Analytics menggunakan Apache Kafka sebaga
        .queryName("sales_table_extended") \
        .start()
   ```
-   ![Picture for ](assets/assetkafka/kafka1.png) <br> <br>
+   ![Picture for ](assets/assetskafka/kafka1.png) <br> <br>
    Implementasi penambahan kolom total_quantity berhasil. Data agregasi kini lebih lengkap dengan informasi total kuantitas produk terjual, memberikan insight yang lebih kaya mengenai performa penjualan produk. <br> <br>
    
 
@@ -1234,7 +1234,7 @@ Praktikum ini memperkenalkan Streaming Analytics menggunakan Apache Kafka sebaga
        .queryName("sales_table_filtered") \
        .start()
   ```
-  ![Picture for ](assets/assetkafka/kafka2.png) <br> <br>
+  ![Picture for ](assets/assetskafka/kafka2.png) <br> <br>
   Hal ini menunjukkan bahwa dari total 451 transaksi (dari sales_table_extended), sebanyak 362 transaksi memenuhi kriteria harga > 1 juta, yaitu 80.3%. Angka-angka ini membuktikan bahwa filter dan agregasi telah berhasil dilakukan. <br>
   
 Jadi kesimpulannya filter transaksi berdasarkan harga (> Rp 1.000.000) berhasil diterapkan. Meskipun tampilan tabel secara langsung mungkin tidak selalu konsisten di notebook, analisis jumlah transaksi yang difilter membuktikan bahwa proses filter berjalan dengan benar dan memberikan informasi tentang segmen transaksi bernilai tinggi. <br> <br>
@@ -1252,7 +1252,7 @@ Jadi kesimpulannya filter transaksi berdasarkan harga (> Rp 1.000.000) berhasil 
    result = spark.sql("SELECT * FROM raw_transactions LIMIT 10")
    result.show()
   ```
-  ![Picture for ](assets/assetkafka/kafka3.png) <br> <br
+  ![Picture for ](assets/assetskafka/kafka3.png) <br> <br
   Mode ```append``` berhasil digunakan untuk menampilkan aliran data transaksi mentah. Hal ini membuktikan kemampuan sistem untuk menangkap dan menyajikan data individual secara real-time segera setelah diterima, yang berguna untuk debugging atau logging. <br> <br>
 
 
