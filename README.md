@@ -1094,7 +1094,87 @@ Gunakan Spark DataFrame df (bukan sampel):
 
 
 ## Praktikum 6 Spark ML
-**Implementasi Machine Learning Sederhana (Regresi, Klasifikasi, Clustering)** <br>
+**Pengantar Spark MLlib, Implementasi Machine Learning Sederhana (Regresi, Klasifikasi, Clustering)**
+
+**Tujuan Praktikum**
+1. Mahasiswa mampu menyiapkan lingkungan kerja Spark di Google Colab.
+2. Mahasiswa memahami konsep VectorAssembler dalam Spark ML.
+3. Mahasiswa mampu menerapkan algoritma Linear Regression, Logistic Regression,
+dan **K-Means**.
+
+<br>
+   
+
+#### Latihan 
+**Hasil dari implementasi spark MLlib Machine Learning di Google Collab** [Klik Disini! Untuk Melihat Hasil Praktik Pada Google Colllab](https://colab.research.google.com/drive/1HPINohCPtOCyMYQr5SzhV2FmV1U8f5fg?usp=sharing) <br>
+
+
+  1.  Pada <b>Bagian 2 (Regresi)</b>, tambahkan satu data baru ke df_regresi (misal: Pengalaman=10 tahun, Umur=40, Gaji=??). Lakukan prediksi ulang dan lihat berapa prediksi gajinya
+  ```python
+  # Tambah data baru
+  data_baru = [(10.0, 40, None)]  # Gaji belum diketahui
+  df_baru = spark.createDataFrame(data_baru, ["pengalaman", "umur", "gaji"])
+  
+  # Transform & prediksi
+  data_siap_baru = assembler.transform(df_baru).select("features", "gaji")
+  prediksi = model.transform(data_siap_baru)
+  prediksi.select("features", "prediction").show()
+  ```
+   ![Picture for ](assets/assetsml/ml1) <br> <br>
+   **Jawaban:** Prediksi gaji karyawan baru = $16,415.50 <br>
+   
+  ```
+  Rumus: Gaji = 2500 + (1050.25 × 10) + (85.30 × 40)
+            = 2500 + 10,502.50 + 3,412
+            = $16,414.50
+  ```
+
+  <br> <br>
+
+  2. Pada <b>Bagian 4 (K-Means)<b>, ubah nilai setK(3) menjadi setK(2). Amati bagaimana perubahan pengelompokan datanya. Apakah datanya terbagi menjadi "Kaya" dan "Miskin" saja?
+  ```python
+  # Training dengan K=2
+  kmeans_2 = KMeans().setK(2).setSeed(1)
+  model_2 = kmeans_2.fit(data_siap)
+  
+  # Prediksi
+  predictions_2 = model_2.transform(data_siap)
+  predictions_2.show()
+  ```
+  ![Picture for ](assets/assetsml/ml2.png) <br> <br>
+  **Analisis Centroid (K=2):**
+  ```
+  Cluster 0:
+    - Pendapatan rata-rata: 34.0 juta
+    - Skor belanja rata-rata: 56.3
+    → INTERPRETASI: PENDAPATAN RENDAH-SEDANG
+  
+  Cluster 1:
+    - Pendapatan rata-rata: 108.8 juta
+    - Skor belanja rata-rata: 91.2
+    → INTERPRETASI: PENDAPATAN TINGGI
+  ```
+**Jadi jawabannya:**
+Ya, dengan K=2 data terbagi lebih sederhana: <br>
+Cluster 0: Pendapatan Rendah-Sedang (< 70 juta) <br>
+Cluster 1: Pendapatan Tinggi (≥ 70 juta) <br>
+
+  ![Picture for ](assets/assetsml/clustermlLatihan.png) <br> <br>
+  Kesimpulannya yaitu distribusi depth terlihat NORMAL (Gaussian distribution). <br> <br>
+
+
+**Perbandingan K=3 vs K=2:**
+| Aspek | K=3 | K=2 |
+|-------|-----|-----|
+| **Granularity** | Detail (Rendah/Sedang/Tinggi) | Simpel (Rendah/Tinggi) |
+| **Use Case** | Marketing campaign spesifik | Segmentasi umum |
+| **Interpretasi** | Lebih kompleks | Lebih mudah |
+
+
+<br> <br> <br>
+
+
+## Praktikum 7
 
 
 
