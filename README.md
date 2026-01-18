@@ -976,7 +976,121 @@ df_tugas.show()
 
 4. <b>Tampilkan Hasil Akhir: </b> <br>
    ○ Tampilkan 10 baris pertama dari DataFrame akhir yang telah bersih dan memiliki fitur-fitur baru. Pastikan semua kolom hasil transformasi dan engineering terlihat
-   ![Picture for ](assets/assetscollabs/collab4.png) <br> <br>
+   ![Picture for ](assets/assetscollabs/collab4.png)
+
+
+<br> <br> <br>
+
+
+## Praktikum 5 Analisis Data
+
+**Tujuan Praktikum**
+Setelah menyelesaikan modul ini, praktikan diharapkan mampu:
+  1. Menginisialisasi session PySpark di Google Colab.
+  2. Memuat (load) dataset ke dalam Spark DataFrame.
+  3. Menghitung statistik deskriptif dasar (Mean, StdDev, Min, Max) menggunakan fungsi .describe().
+  4. Menghitung statistik spesifik (Mean, Median, Modus, Varians, Skewness) menggunakan pyspark.sql.functions.
+  5. Memahami tantangan dan solusi dalam menghitung median (aproksimasi vs. eksak).
+  6. Melakukan visualisasi distribusi data (Histogram & Box Plot) dari Spark DataFrame.
+
+<br> <br>
+   
+
+#### Latihan 
+**Pra-Pemrosesan Data dengan PySpark di Google Colab** [Klik Disini! Untuk Melihat Hasil Praktik Pada Google Colllab](https://colab.research.google.com/drive/10DIzd4F1Ox9DOXZXg7BJ77jcimisKXkD?usp=sharing) <br>
+
+Gunakan Spark DataFrame df (bukan sampel):
+  1. Hitung statistik deskriptif (Mean, Median (aproksimasi), StdDev) untuk kolom carat.
+  ```python
+  carat_stats = df.select(
+      mean("carat").alias("Mean Carat"),
+      stddev("carat").alias("StdDev Carat"),
+      min("carat").alias("Min Carat"),
+      max("carat").alias("Max Carat")
+  )
+  carat_stats.show()
+  
+  median_carat = df.approxQuantile("carat", [0.5], 0.01)[0]
+  print(f"Median Carat: {median_carat:.3f}")
+  ```
+   ![Picture for ](assets/assetssparks/spark1.png) <br> <br>
+  Interpretasi: <br>
+  - Rata-rata berat berlian: 0.798 karat <br>
+  - Median berat: 0.700 karat (lebih kecil dari mean → positive skew) <br>
+  - Simpangan baku: 0.474 (variasi berat cukup besar) <br>
+  - Range: 0.2 hingga 5.01 karat <br> <br>
+   
+   
+  2. Bandingkan rata-rata price untuk berlian dengan color = 'D' vs color = 'J'. Manakah yang rata-rata lebih mahal?
+  ```python
+  price_D = df.filter(col("color") == "D").select(mean("price")).collect()[0][0]
+  price_J = df.filter(col("color") == "J").select(mean("price")).collect()[0][0]
+  
+  print(f"\n💎 Rata-rata harga berlian warna D (terbaik): ${price_D:,.2f}")
+  print(f"💎 Rata-rata harga berlian warna J (terburuk): ${price_J:,.2f}")
+  print(f"\n📊 Selisih harga: ${__builtins__.abs(price_D - price_J):,.2f}")
+  
+  if price_D > price_J:
+      print(f"\n✅ KESIMPULAN: Berlian warna D rata-rata lebih mahal ${price_D - price_J:,.2f}")
+  else:
+      print(f"\n✅ KESIMPULAN: Berlian warna J rata-rata lebih mahal ${price_J - price_D:,.2f}")
+  
+  print("\n📊 Statistik Harga per Warna:")
+  color_stats = df.groupBy("color") \
+      .agg(
+          count("price").alias("Jumlah"),
+          mean("price").alias("Rata-rata Harga"),
+          min("price").alias("Harga Min"),
+          max("price").alias("Harga Max")
+      ) \
+      .orderBy("color")
+  
+  color_stats.show()
+  ```
+  ![Picture for ](assets/assetssparks/spark2.png) <br> <br>
+  ❗ SURPRISING RESULT: Berlian warna 'J' (terburuk) rata-rata LEBIH MAHAL $2,153.87 dari warna 'D' (terbaik)! <br>
+  💡 **INSIGHT**: <br>
+  - Berlian warna 'J' punya average carat tertinggi (1.162) <br>
+  - Berlian warna 'D' punya average carat rendah (0.658) <br>
+  - Berat (carat) lebih dominan mempengaruhi harga dibanding warna! <br>
+  - Berlian 'J' yang besar lebih mahal dari berlian 'D' yang kecil <br> <br>
+
+  
+  3. Buat histogram untuk kolom depth (gunakan sampling seperti Langkah 5.1 - 5.3). Apakah distribusinya terlihat Normal, Skewed, atau Bimodal?
+   ```python
+  plt.figure(figsize=(12, 6))
+  sns.histplot(viz_pandas_df['depth'], kde=True, bins=50, color='coral')
+  plt.title('Distribusi Kedalaman (Depth) Berlian')
+  plt.xlabel('Depth (%)')
+  plt.ylabel('Frekuensi')
+  plt.axvline(viz_pandas_df['depth'].mean(), color='red', 
+              linestyle='--', linewidth=2, label='Mean')
+  plt.axvline(viz_pandas_df['depth'].median(), color='blue', 
+              linestyle='--', linewidth=2, label='Median')
+  plt.legend()
+  plt.show()
+  
+  # Hitung skewness
+  depth_skewness = df.select(skewness("depth")).collect()[0][0]
+  print(f"Skewness 'depth': {depth_skewness:.4f}")
+   ```
+  ![Picture for ](assets/assetssparks/sparkdiagramLatihan.png) <br> <br>
+  **Hasil Analisis:** <br>
+  - Skewness mendekati 0 → Distribusi hampir Normal (simetris) <br>
+  - Mean ≈ Median (hampir sama) <br>
+  - Bentuk histogram menyerupai kurva lonceng (bell curve) <br>
+  - Distribusi Unimodal (1 puncak) <br>
+  
+  ![Picture for ](assets/assetssparks/spark3.png) <br> <br>
+  Kesimpulannya yaitu distribusi depth terlihat NORMAL (Gaussian distribution).
+
+
+<br> <br> <br>
+
+
+## Praktikum 6 Spark ML
+**Implementasi Machine Learning Sederhana (Regresi, Klasifikasi, Clustering)** <br>
+
 
 
 
