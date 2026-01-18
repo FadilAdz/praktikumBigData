@@ -1081,7 +1081,13 @@ Gunakan Spark DataFrame df (bukan sampel):
   - Distribusi Unimodal (1 puncak) <br>
   
   ![Picture for ](assets/assetssparks/spark3.png) <br> <br>
-  Kesimpulannya yaitu distribusi depth terlihat NORMAL (Gaussian distribution).
+  Kesimpulannya yaitu distribusi depth terlihat NORMAL (Gaussian distribution). <br> <br>
+
+**Kesimpulan Praktikum Dalam praktikum ini, kita telah:** <br>
+1. Menjalankan PySpark di Colab. <br>
+2. Menghitung statistik deskriptif menggunakan .describe() dan pyspark.sql.functions. <br>
+3. Memahami perbedaan dan trade-off dalam menghitung Median (Aproksimasi vs. Eksak). <br>
+4. Menggunakan sampling untuk mengambil sebagian data Spark, mengubahnya ke Pandas, dan membuat visualisasi (Histogram, Box Plot) untuk menganalisis distribusi dan outliers.
 
 
 <br> <br> <br>
