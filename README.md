@@ -993,9 +993,8 @@ Setelah menyelesaikan modul ini, praktikan diharapkan mampu:
   5. Memahami tantangan dan solusi dalam menghitung median (aproksimasi vs. eksak).
   6. Melakukan visualisasi distribusi data (Histogram & Box Plot) dari Spark DataFrame.
 
-<br> <br>
+<br>
    
-
 #### Latihan 
 **Pra-Pemrosesan Data dengan PySpark di Google Colab** [Klik Disini! Untuk Melihat Hasil Praktik Pada Google Colllab](https://colab.research.google.com/drive/10DIzd4F1Ox9DOXZXg7BJ77jcimisKXkD?usp=sharing) <br>
 
