@@ -20,7 +20,7 @@ Repository ini berisi rangkaian praktikum Big Data yang mencakup penyimpanan ter
 5. [Praktikum 5 Analisis Data](#Praktikum-5-Analisis-Data)
 6. [Praktikum 6 Spark ML](#Praktikum-6-Spark-ML)
 7. [Praktikum 7 Analisis Streaming Kafka](#Praktikum-7-Analisis-Streaming-Kafka)
-8. [Kesimpulan](#KESIMPULAN)
+8. [Kesimpulan](#$${\color{lightblue}KESIMPULAN}$$)
 
 <br>
 
