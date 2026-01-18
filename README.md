@@ -1120,7 +1120,7 @@ dan **K-Means**.
   prediksi = model.transform(data_siap_baru)
   prediksi.select("features", "prediction").show()
   ```
-   ![Picture for ](assets/assetsml/ml1) <br> <br>
+   ![Picture for ](assets/assetsml/ml1.png) <br> <br>
    **Jawaban:** Prediksi gaji karyawan baru = $16,415.50 <br>
    
   ```
