@@ -1175,6 +1175,88 @@ Cluster 1: Pendapatan Tinggi (≥ 70 juta) <br>
 
 
 ## Praktikum 7 Analisis Streaming Kafka
+**Real-time Data Processing dengan Apache Kafka & Spark Structured Streaming**
+
+**Pendahuluan**
+Praktikum ini memperkenalkan Streaming Analytics menggunakan Apache Kafka sebagai message broker dan Apache Spark Structured Streaming sebagai processing engine. Berbeda dengan batch processing yang memproses data secara berkala, streaming analytics memproses data real-time saat data masuk. <br>
+
+**Tujuan Praktikum**
+1. Mahasiswa mampu menyiapkan lingkungan Big Data (Spark & Kafka) di cloud. <br>
+2. Mahasiswa memahami cara mengirim data dummy ke Kafka (Producer). <br>
+3. Mahasiswa mampu memproses data streaming menggunakan Spark Structured Streaming (Consumer).
+
+<br>
+   
+
+#### Tugas Mandiri (Latihan) 
+**Hasil dari implementasi Streaming Analytics (Kafka & Spark) di Google Collab** [Klik Disini! Untuk Melihat Hasil Praktik Pada Google Colllab](https://colab.research.google.com/drive/1NPAvREf4aNfKUtTZd8fm68MLaVVmi04O?usp=sharing) <br>
+
+
+  1.  Tambahkan kolom baru pada analisis untuk menghitung **Total Quantity** (jumlah barang terjual) per produk.
+  ```python
+   from pyspark.sql.functions import sum as _sum, count as _count
+   
+   df_extended = df_with_revenue.groupBy("product") \
+       .agg(
+           _sum("revenue").alias("total_sales"),
+           _count("transaction_id").alias("transaction_count"),
+           _sum("quantity").alias("total_quantity")  # ← TAMBAHAN
+       ) \
+       .orderBy("total_sales", ascending=False)
+   
+   query_extended = df_extended.writeStream \
+       .outputMode("complete") \
+       .format("memory") \
+       .queryName("sales_table_extended") \
+       .start()
+  ```
+   ![Picture for ](assets/assetkafka/kafka1.png) <br> <br>
+   Implementasi penambahan kolom total_quantity berhasil. Data agregasi kini lebih lengkap dengan informasi total kuantitas produk terjual, memberikan insight yang lebih kaya mengenai performa penjualan produk. <br> <br>
+   
+
+  2. Ubah filter agar Spark hanya memproses transaksi dengan price > 1.000.000.
+  ```python
+   # Filter data
+   df_filtered = df_with_revenue.filter(col("price") > 1000000)
+   
+   # Agregasi
+   df_analysis_filtered = df_filtered.groupBy("product") \
+       .agg(
+           _sum("revenue").alias("total_sales"),
+           _count("transaction_id").alias("transaction_count")
+       ) \
+       .orderBy("total_sales", ascending=False)
+   
+   # Stream query
+   query_filtered = df_analysis_filtered.writeStream \
+       .outputMode("complete") \
+       .format("memory") \
+       .queryName("sales_table_filtered") \
+       .start()
+  ```
+  ![Picture for ](assets/assetkafka/kafka2.png) <br> <br>
+  Hal ini menunjukkan bahwa dari total 451 transaksi (dari sales_table_extended), sebanyak 362 transaksi memenuhi kriteria harga > 1 juta, yaitu 80.3%. Angka-angka ini membuktikan bahwa filter dan agregasi telah berhasil dilakukan. <br>
+  
+Jadi kesimpulannya filter transaksi berdasarkan harga (> Rp 1.000.000) berhasil diterapkan. Meskipun tampilan tabel secara langsung mungkin tidak selalu konsisten di notebook, analisis jumlah transaksi yang difilter membuktikan bahwa proses filter berjalan dengan benar dan memberikan informasi tentang segmen transaksi bernilai tinggi. <br> <br>
+
+
+  3. (Opsional) Ganti outputMode menjadi append (Anda harus membuang bagian agregasi groupBy untuk bisa menggunakan append mode tanpa watermark).
+  ```python
+   query_append = df_parsed.writeStream \
+       .outputMode("append") \
+       .format("memory") \
+       .queryName("raw_transactions") \
+       .start()
+   
+   # Query hasil
+   result = spark.sql("SELECT * FROM raw_transactions LIMIT 10")
+   result.show()
+  ```
+  ![Picture for ](assets/assetkafka/kafka3.png) <br> <br
+  Mode ```append``` berhasil digunakan untuk menampilkan aliran data transaksi mentah. Hal ini membuktikan kemampuan sistem untuk menangkap dan menyajikan data individual secara real-time segera setelah diterima, yang berguna untuk debugging atau logging. <br> <br>
+
+
+  
 
 
 
