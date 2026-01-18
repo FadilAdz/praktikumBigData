@@ -20,6 +20,7 @@ Repository ini berisi rangkaian praktikum Big Data yang mencakup penyimpanan ter
 5. [Praktikum 5 Analisis Data](#Praktikum-5-Analisis-Data)
 6. [Praktikum 6 Spark ML](#Praktikum-6-Spark-ML)
 7. [Praktikum 7 Analisis Streaming Kafka](#Praktikum-7-Analisis-Streaming-Kafka)
+8. [Kesimpulan](#KESIMPULAN)
 
 <br>
 
@@ -1253,10 +1254,24 @@ Jadi kesimpulannya filter transaksi berdasarkan harga (> Rp 1.000.000) berhasil 
    result.show()
   ```
   ![Picture for ](assets/assetskafka/kafka3.png) <br> <br
-  Mode ```append``` berhasil digunakan untuk menampilkan aliran data transaksi mentah. Hal ini membuktikan kemampuan sistem untuk menangkap dan menyajikan data individual secara real-time segera setelah diterima, yang berguna untuk debugging atau logging. <br> <br>
-
-
+  Mode ```append``` berhasil digunakan untuk menampilkan aliran data transaksi mentah. Hal ini membuktikan kemampuan sistem untuk menangkap dan menyajikan data individual secara real-time segera setelah diterima, yang berguna untuk debugging atau logging. 
   
+  
+<br> <br> <br>
+
+
+# $${\color{lightblue}KESIMPULAN}$$  
+Berdasarkan seluruh rangkaian praktikum yang telah dilakukan, dapat disimpulkan bahwa ekosistem Big Data terdiri dari berbagai komponen yang saling terintegrasi, mulai dari penyimpanan terdistribusi, pemrosesan data skala besar, hingga tahap ingestion, preprocessing, analisis, dan persiapan data untuk machine learning. Melalui praktikum ini, penulis memperoleh pemahaman menyeluruh tidak hanya pada aspek penggunaan tools, tetapi juga pada konsep, arsitektur, dan alasan teknis di balik setiap teknologi yang digunakan. <br>
+
+Pada tahap penyimpanan data, penggunaan HDFS, MongoDB, dan Cassandra menunjukkan perbedaan pendekatan dalam menangani data besar, baik yang bersifat terstruktur maupun semi-terstruktur. HDFS menekankan penyimpanan terdistribusi berbasis blok untuk mendukung pemrosesan paralel dan fault tolerance, sementara MongoDB dan Cassandra memperlihatkan fleksibilitas NoSQL dalam pengelolaan data dengan skema dinamis dan skalabilitas tinggi. <br>
+
+Pada tahap pemrosesan data besar, perbandingan antara MapReduce, Spark RDD, dan Spark DataFrame memperlihatkan evolusi arsitektur Big Data dari generasi ke generasi. MapReduce memiliki fleksibilitas tinggi namun kurang efisien karena ketergantungan pada disk I/O, Spark RDD menawarkan pemrosesan in-memory yang lebih cepat, dan Spark DataFrame menjadi pendekatan paling optimal berkat dukungan skema terstruktur, Catalyst Optimizer, serta Tungsten Execution Engine. Hasil benchmark menunjukkan bahwa tingkat abstraksi yang lebih tinggi berbanding lurus dengan kemudahan penggunaan dan performa eksekusi. <br>
+
+Pada modul data integrasi, penggunaan Sqoop, Flume, dan Kafka memperlihatkan perbedaan karakteristik ingestion data secara batch maupun real-time. Sqoop efektif untuk transfer data antara database relasional dan HDFS, Flume cocok untuk pengumpulan data log secara streaming, sedangkan Kafka unggul dalam membangun pipeline data real-time dengan throughput tinggi dan skalabilitas yang baik. <br>
+
+Tahap data preprocessing dan feature engineering menggunakan PySpark menegaskan bahwa kualitas data sangat menentukan keberhasilan analisis dan machine learning. Proses data cleaning, transformasi, standarisasi, encoding data kategorikal, serta pembuatan fitur baru berhasil menghasilkan dataset yang siap digunakan oleh model analitik dan machine learning secara optimal. <br>
+
+Secara keseluruhan, praktikum Big Data ini tidak hanya melatih kemampuan teknis dalam menggunakan berbagai tools populer di industri, tetapi juga membangun pola pikir analitis dalam memilih teknologi yang tepat sesuai kebutuhan data dan kasus penggunaan. Praktikum ini menjadi fondasi yang kuat untuk memahami implementasi Big Data di dunia nyata, khususnya dalam bidang data engineering, data analytics, dan pengolahan data berskala besar.
 
 
 
