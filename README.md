@@ -1260,7 +1260,7 @@ Jadi kesimpulannya filter transaksi berdasarkan harga (> Rp 1.000.000) berhasil 
 <br> <br> <br>
 
 
-# $${\color{lightblue}KESIMPULAN}$$  
+## $${\color{lightblue}KESIMPULAN}$$  
 Berdasarkan seluruh rangkaian praktikum yang telah dilakukan, dapat disimpulkan bahwa ekosistem Big Data terdiri dari berbagai komponen yang saling terintegrasi, mulai dari penyimpanan terdistribusi, pemrosesan data skala besar, hingga tahap ingestion, preprocessing, analisis, dan persiapan data untuk machine learning. Melalui praktikum ini, penulis memperoleh pemahaman menyeluruh tidak hanya pada aspek penggunaan tools, tetapi juga pada konsep, arsitektur, dan alasan teknis di balik setiap teknologi yang digunakan. <br>
 
 Pada tahap penyimpanan data, penggunaan HDFS, MongoDB, dan Cassandra menunjukkan perbedaan pendekatan dalam menangani data besar, baik yang bersifat terstruktur maupun semi-terstruktur. HDFS menekankan penyimpanan terdistribusi berbasis blok untuk mendukung pemrosesan paralel dan fault tolerance, sementara MongoDB dan Cassandra memperlihatkan fleksibilitas NoSQL dalam pengelolaan data dengan skema dinamis dan skalabilitas tinggi. <br>
